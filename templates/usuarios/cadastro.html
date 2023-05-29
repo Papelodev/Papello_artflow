@@ -1,4 +1,7 @@
-{% include 'partials/_usuarioCabecalho.html' %}
+{% extends 'shared/base.html' %}
+{% load static %}
+{% block content %}
+
             <section class="galeria" style="margin-left: 5em">               
                         <form action="{% url 'cadastro' %}" method="POST">
                             {% csrf_token %}
@@ -27,4 +30,4 @@
     </div>
 </body>
 
-{% include 'partials/_footer.html' %}
+{% endblock %}
