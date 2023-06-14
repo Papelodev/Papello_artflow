@@ -46,7 +46,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.galeria.apps.GaleriaConfig',
     'apps.usuarios.apps.UsuariosConfig',
+    'apps.orders.apps.OrdersConfig',
     'storages', 
+    'django_q',
+    'requests',
 
 ]
 
@@ -187,4 +190,24 @@ from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
    messages.ERROR:'danger',
    messages.SUCCESS:'success',
+}
+
+#Django-q
+
+# settings.py example
+Q_CLUSTER = {
+    'name': 'artflow',
+    'workers': 8,
+    'recycle': 500,
+    'retry': 180,     # Set a larger value for retry (in seconds)
+    'timeout': 120,   # Set a smaller value for timeout (in seconds)
+    'compress': True,
+    'cpu_affinity': 1,
+    'save_limit': 250,
+    'queue_limit': 500,
+    'label': 'Django Q',
+    'redis': {
+        'host': '127.0.0.1',
+        'port': 6379,
+        'db': 0, }
 }

@@ -33,7 +33,7 @@ body {
     line-height: 1;
     font-family: 'Space Grotesk', sans-serif;
     min-height: 100vh;
-    background: linear-gradient(#041833,#04244F,#154580);
+    background: linear-gradient(#042a33,#044f3f,#158057);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -84,7 +84,7 @@ table {
 .cabecalho__busca {
     align-items: center;
     border-radius: 10px;
-    background: linear-gradient(45deg, #C98CF1,#7B78E5);
+    background: linear-gradient(45deg, #8ce2f1,#78e5ae);
     display: flex;
     height: auto;
     justify-content: space-between;
@@ -94,7 +94,7 @@ table {
 
 .busca__fundo {
     align-items: center;
-    background-color: #041A37;
+    background-color: #043735;
     border-radius: 8px;
     display: flex;
     margin: 0 auto;
@@ -122,7 +122,7 @@ table {
 }
 
 .cards__titulo {
-    color: #7B78E5;
+    color: #78e593;
     font-size: 2rem;
     line-height: 3rem;
     margin-bottom: 1.5rem;
