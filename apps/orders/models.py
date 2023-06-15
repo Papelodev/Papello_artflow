@@ -36,6 +36,8 @@ class Order(models.Model):
     orderPayment = JSONField(null=True)
     namePaymentMethodGateway = models.CharField(max_length=255, null=True)
 
+    #qualquer coisa teste
+
     #customer data
     idCustomer = models.IntegerField(null=True)
     typeCustomer = models.CharField(max_length=1, null=True)
