@@ -38,7 +38,7 @@ class Order(models.Model):
 
     #customer data
     idCustomer = models.IntegerField(null=True)
-    typeCustomer = models.CharField(max_length=1, 
+    typeCustomer = models.CharField(max_length=1, null=True)
     birthDate = models.DateField(null=True)
     gender = models.CharField(max_length=255, null=True)
     phone1 = models.CharField(max_length=255, null=True)
