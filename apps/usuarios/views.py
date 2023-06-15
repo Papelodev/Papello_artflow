@@ -21,6 +21,7 @@ def login(request):
                 request,
                 username=nome,
                 password=senha
+            
         )
             if usuario is not None:
                 auth.login(request, usuario)
