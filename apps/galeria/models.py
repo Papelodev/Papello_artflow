@@ -2,8 +2,58 @@ from django.db import models
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.conf import settings
+from functools import partial
 
 
+
+class Arte(models.Model):
+
+    STATUS = [
+    ( "Envio de arte", (
+        ("AGUARDANDO", "Aguardando"),
+        ("ENVIADO", "Enviado"),
+        ("APROVADO", "Aprovado"),
+    )),
+    ("Confecção", (
+        ("AGUARDANDO", "Aguardando"),
+        ("EM_ANDAMENTO", "Em andamento"),
+        ("CONCLUÍDO", "Concluído"),
+    )),
+    ( "Aprovação", (
+        ("AGUARDANDO", "Aguardando"),
+        ("ALTERAÇÃO", "Alteração"),
+        ("APROVADA", "Aprovada"),
+    )),
+    ]
+
+    status = models.CharField(max_length=100, choices=STATUS, default='ENVIO-AGUARDANDO')
+    idCustomer = models.IntegerField(null=False, blank = False)
+    idOrder = models.IntegerField(null=False, blank = False)
+
+ 
+
+   
+    def upload_file_path(self, filename, field_name):
+        # Construct the folder path based on the field name, idCustomer, and idOrder fields
+        folder_path = f"arts/{self.idCustomer}/{self.idOrder}/{field_name}"
+        return folder_path + '/' + filename
+
+    #referências para confecção
+    instructions = models.CharField(max_length=500, null=False, blank = False)
+    referencefiles = models.FileField(upload_to=partial(upload_file_path, field_name='references'), blank=True)
+
+    #arquivo para aprovação
+    mockup = models.ImageField(upload_to=partial(upload_file_path, field_name='mockup'), blank=True)
+
+    #Alteração   
+    alteracoes = models.CharField(max_length=500, null=False, blank = False)  #instruções de alteração    
+    alterafiles = models.ImageField(upload_to=partial(upload_file_path, field_name='alterafiles'), blank=True) #armazena arquivos para alterações    
+    alteracounter = alteracounter = models.PositiveIntegerField(default=0) #conta numero de alterações
+
+    #arquivo final de arte aprovada
+    artefinal = models.ImageField(upload_to=partial(upload_file_path, field_name='artefinal'), blank=True)
+
+    
 class Fotografia(models.Model):
 
   
