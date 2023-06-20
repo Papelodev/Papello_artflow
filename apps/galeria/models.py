@@ -4,9 +4,15 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from functools import partial
 
+#generalChanges
 
+def upload_file_path(instance, filename, field_name):
+        # Construct the folder path based on the field name, idCustomer, and idOrder fields
+        folder_path = f"arts/{instance.idCustomer}/{instance.idOrder}/{field_name}"
+        return folder_path + '/' + filename
 
 class Arte(models.Model):
+
 
     STATUS = [
     ( "Envio de arte", (
@@ -30,13 +36,7 @@ class Arte(models.Model):
     idCustomer = models.IntegerField(null=False, blank = False)
     idOrder = models.IntegerField(null=False, blank = False)
 
- 
 
-   
-    def upload_file_path(self, filename, field_name):
-        # Construct the folder path based on the field name, idCustomer, and idOrder fields
-        folder_path = f"arts/{self.idCustomer}/{self.idOrder}/{field_name}"
-        return folder_path + '/' + filename
 
     #referências para confecção
     instructions = models.CharField(max_length=500, null=False, blank = False)

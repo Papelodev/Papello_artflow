@@ -3,6 +3,8 @@
 import apps.galeria.models
 from django.db import migrations, models
 import functools
+from apps.galeria.models import upload_file_path
+
 
 
 class Migration(migrations.Migration):
@@ -20,12 +22,12 @@ class Migration(migrations.Migration):
                 ('idCustomer', models.IntegerField()),
                 ('idOrder', models.IntegerField()),
                 ('instructions', models.CharField(max_length=500)),
-                ('referencefiles', models.FileField(blank=True, upload_to=functools.partial(apps.galeria.models.Arte.upload_file_path, *(), **{'field_name': 'references'}))),
-                ('mockup', models.ImageField(blank=True, upload_to=functools.partial(apps.galeria.models.Arte.upload_file_path, *(), **{'field_name': 'mockup'}))),
+                ('referencefiles', models.FileField(blank=True, upload_to=functools.partial(apps.galeria.models.upload_file_path, *(), **{'field_name': 'references'}))),
+                ('mockup', models.ImageField(blank=True, upload_to=functools.partial(apps.galeria.models.upload_file_path, *(), **{'field_name': 'mockup'}))),
                 ('alteracoes', models.CharField(max_length=500)),
-                ('alterafiles', models.ImageField(blank=True, upload_to=functools.partial(apps.galeria.models.Arte.upload_file_path, *(), **{'field_name': 'alterafiles'}))),
+                ('alterafiles', models.ImageField(blank=True, upload_to=functools.partial(apps.galeria.models.upload_file_path, *(), **{'field_name': 'alterafiles'}))),
                 ('alteracounter', models.PositiveIntegerField(default=0)),
-                ('artefinal', models.ImageField(blank=True, upload_to=functools.partial(apps.galeria.models.Arte.upload_file_path, *(), **{'field_name': 'artefinal'}))),
+                ('artefinal', models.ImageField(blank=True, upload_to=functools.partial(apps.galeria.models.upload_file_path, *(), **{'field_name': 'artefinal'}))),
             ],
         ),
     ]
