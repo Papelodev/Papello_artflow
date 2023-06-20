@@ -33,7 +33,7 @@ body {
     line-height: 1;
     font-family: 'Space Grotesk', sans-serif;
     min-height: 100vh;
-    background: linear-gradient(#042a33,#044f3f,#158057);
+    background: linear-gradient(#84A928, #e3ecb9, #e9f0cf);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -261,13 +261,13 @@ table {
     display: flex;
     margin-bottom: 1.5rem;
     text-decoration: none;
-    color: #D9D9D9;
+    color: #1b201b;
     font-size: 24px;
 }
 
 .menu-lateral__navegacao a:first-child {
     font-weight: bold;
-    color: #7B78E5;
+    color: #1b201b;
 }
 
 .menu-lateral__navegacao img {
@@ -333,13 +333,15 @@ table {
 }
 
 .rodape {
-    background-color: #04244F;
+    background-color: #84A928;
     width: 100%;
     padding: 1.5rem 3rem;
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
     color: #FFFFFF;
+    position: fixed;
+    bottom: 0;
 }
 
 .rodape__icones {
@@ -350,6 +352,7 @@ table {
 
 .rodape__texto {
     font-size: 1.1rem;
+    text-align: center;
 }
 
 .tags {

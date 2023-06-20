@@ -47,6 +47,17 @@ class CadastroForms(forms.Form):
             }
         )
     )
+    cpf=forms.CharField(
+        label="CPF/CNPJ",
+        required=True,
+        max_length=14,
+        widget=forms.TextInput(
+            attrs={
+                "class":"form-control",
+                "placeholder": "CPF/CNPJ"
+            }
+        )
+    )
     senha_1=forms.CharField(
         label="Senha",
         required=True,

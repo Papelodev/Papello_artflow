@@ -93,3 +93,19 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.pk}"
+
+
+class OrderByClient(models.Model):
+    idOrder = models.IntegerField(null=True)
+    status = models.CharField(max_length=15, null=True)
+    registerDate = models.DateField(null=True)
+    total = models.DecimalField(max_digits=15, decimal_places=2, null=True)
+    totalItems = models.DecimalField(max_digits=15, decimal_places=2, null=True)
+    totalShipping = models.IntegerField(null=True)
+    totalDiscount = models.IntegerField(null=True)
+    quantityItems = models.IntegerField(null=True)
+    document = models.CharField(max_length=255, null=True)
+    name = models.CharField(max_length=255, null=True)
+
+    def __str__(self):
+        return self.name
