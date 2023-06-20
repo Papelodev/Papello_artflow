@@ -3,8 +3,10 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from django.conf import settings
 from functools import partial
+from apps.customers.models import CustomerProfile
+from apps.orders.models import Order
 
-#generalChanges
+
 
 def upload_file_path(instance, filename, field_name):
         # Construct the folder path based on the field name, idCustomer, and idOrder fields
@@ -32,6 +34,8 @@ class Arte(models.Model):
     )),
     ]
 
+    customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, null=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
     status = models.CharField(max_length=100, choices=STATUS, default='ENVIO-AGUARDANDO')
     idCustomer = models.IntegerField(null=False, blank = False)
     idOrder = models.IntegerField(null=False, blank = False)

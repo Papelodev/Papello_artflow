@@ -1,8 +1,14 @@
 from django.db import models
 from jsonfield import JSONField
+from apps.customers.models import CustomerProfile
 
+class Product(models.Model):
+    name = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    # Additional fields for product
+    description = models.TextField()
+    # ...    
 
-    
 class Order(models.Model):
     idQueue = models.IntegerField()
     deliveryTime = models.IntegerField(null=True)
@@ -21,6 +27,7 @@ class Order(models.Model):
     historyListOrderStatus = JSONField(null=True)
     codigoExternoFrete = models.CharField(max_length=255, null=True)
     
+
     #dados financeiros
     total = models.DecimalField(max_digits=15, decimal_places=2, null=True)
     totalShipping = models.DecimalField(max_digits=15, decimal_places=2, null=True)
@@ -95,3 +102,4 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.pk}"
+    

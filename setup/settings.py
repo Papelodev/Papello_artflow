@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'storages', 
     'django_q',
     'requests',
+    'apps.employees.apps.EmployeesConfig',
+    'apps.customers.apps.CustomersConfig',
 
 ]
 
