@@ -3,12 +3,23 @@ from apps.usuarios.models import MyUser
 from datetime import datetime
 
 class CustomerProfile(models.Model):
-    user = models.OneToOneField(MyUser, on_delete=models.CASCADE, null=True)
-    # Additional fields for customer profile
-    date_of_birth = models.DateField()
+    user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
+    email = models.EmailField()
+    idCustomer = models.IntegerField()
+    nameCustomer = models.CharField(max_length=255)
+    phone1 = models.CharField(max_length=20)
+    phone2 = models.CharField(max_length=20)
+    birthDate = models.DateField()
+    typeCustomer = models.CharField(max_length=100)
     address = models.CharField(max_length=255)
-    creation_date = models.DateTimeField(default=datetime.now, blank=False)
-    # ...
+    billingAddress = models.CharField(max_length=255)
+    gender = models.CharField(max_length=10)
+    cpf_cnpj = models.CharField(max_length=20)
+    rg_ie = models.CharField(max_length=20)
+    customerExternalId = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.nameCustomer
 
 class Order(models.Model):
     customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, null=True)
@@ -18,12 +29,5 @@ class Order(models.Model):
     order_date = models.DateField()
     status = models.CharField(max_length=50)
     
-    # ...
+   
 
-class Payment(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
-    payment_method = models.CharField(max_length=50)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    # Additional fields for payment
-    payment_date = models.DateField()
-    # ...

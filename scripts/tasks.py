@@ -4,9 +4,10 @@ from dotenv import load_dotenv
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.conf import settings
-from apps.orders.models import Order, Product
+from apps.orders.models import Order, Product, Attribute
 from apps.customers.models import CustomerProfile
 from datetime import datetime
+from django.core.management.utils import get_random_secret_key
 load_dotenv()
 
 def oAuth2_orders():  
@@ -51,6 +52,9 @@ def get_queue(eToken):
     if response.status_code == 200:
         response_data = response.json()  # Parse the response as JSON
         
+        #limita as execuções (REMOVER!!)
+        response_data=response_data
+
         #print(response_data)
 
         # Parse the JSON response into a list of dictionaries
@@ -59,16 +63,16 @@ def get_queue(eToken):
         # Iterate over the orders and process each one
         for item in response_data:
             order_id = item['entity']['idOrder']
+            print("Order ID:", order_id)
 
             order_items = item['entity']['orderItems']
             #for order_item in order_items:
                 #product_id = order_item['idOrderItem']
                 
-                #print("Order ID:", order_id)
                 #print("Product ID:", product_id)
-
             order_data = item['entity']
             handle_order_created(order_data, order_items)
+            break
 
 
     else:
@@ -96,6 +100,9 @@ def handle_order_created(json_data, products):
         if order_date_str:
             try:
                 order_date = datetime.strptime(order_date_str, '%Y-%m-%dT%H:%M:%S').date()
+
+
+
             except:
                 pass
 
@@ -112,6 +119,7 @@ def handle_order_created(json_data, products):
     cpf_cnpj=order_data['cpf_cnpj'],
     rg_ie=order_data['rg_ie'],
     customerExternalId=order_data['customerExternalId']
+    customer_email = order_data.get("email")
 
     # Extract order details
     idQueue = order_data.get("idQueue")
@@ -122,11 +130,10 @@ def handle_order_created(json_data, products):
     idSeller = order_data.get("idSeller")
     orderNotes = order_data.get("orderNotes")
     nameStatus = order_data.get("nameStatus")
-    customer_email = order_data.get("email")
 
     #delivery
-    deliveryTime = order_data.get("deliveryTime")
-    crossDocking = order_data.get("crossDocking")
+    order_deliveryTime = order_data.get("deliveryTime")
+    order_crossDocking = order_data.get("crossDocking")
     codigoExternoFrete = order_data.get("codigoExternoFrete")
     nameShipping = order_data.get("nameShipping")
     deliveryShipping = order_data.get("deliveryShipping")
@@ -141,7 +148,7 @@ def handle_order_created(json_data, products):
     
     #payment
     paymentDate = order_data.get("paymentDate")
-    total = order_data.get("total")
+    order_total = order_data.get("total")
     totalShoppingVoucher = order_data.get("totalShoppingVoucher")
     totalItens = order_data.get("totalItens")
     totalInstallment = order_data.get("totalInstallment")
@@ -239,13 +246,63 @@ def handle_order_created(json_data, products):
     for order_item in order_items:
         product_data = order_item
 
+         # Extract product details
+        idOrderItem = product_data.get("idOrderItem")
+        product_id = product_data.get("idProduct")
+        productCode = product_data.get("productCode")
+        product_name = product_data.get("name")
+        nameProduct = product_data.get("nameProduct")
+        idSku = product_data.get("idSku")
+        quantity = product_data.get("quantity")
+        unitPrice = product_data.get("unitPrice")
+        product_total = product_data.get("total")
+        product_deliveryTime = product_data.get("deliveryTime")
+        image = product_data.get("image")
+        brand = product_data.get("brand")
+        category = product_data.get("category")
+        externalIdProduct = product_data.get("externalIdProduct")
+        externalIdSku = product_data.get("externalIdSku")
+        isKit = product_data.get("isKit")
+        productsKit = product_data.get("productsKit")
+        skuCode = product_data.get("skuCode")
+        product_crossDocking = product_data.get("crossDocking")
+       
+
         # Create a new instance of the product and associate it with the order
         product = Product.objects.create(
             order=order,
+            idOrderItem=idOrderItem,
+            product_id=product_id,
+            productCode=productCode,
+            product_name=product_name,
+            nameProduct=nameProduct,
+            idSku=idSku,
+            quantity=quantity,
+            unitPrice=unitPrice,
+            product_total=product_total,
+            product_deliveryTime=product_deliveryTime,
+            image=image,
+            brand=brand,
+            category=category,
+            externalIdProduct=externalIdProduct,
+            externalIdSku=externalIdSku,
+            isKit=isKit,
+            productsKit=productsKit,
+            skuCode=skuCode,
+            product_crossDocking=product_crossDocking,            
+
             # ... set other product fields based on the extracted data
         )
+        order.products.add(product)
 
-        # ... process other nested JSON data if needed
+        attributes_data = order_item.get('attribute', [])
+        for attribute_data in attributes_data:
+            attribute = Attribute.objects.create(
+                name=attribute_data.get('nameAttribute'),
+                value=attribute_data.get('value'),
+                description=attribute_data.get('description')
+        )
+            product.attributes.add(attribute)
 
     # Perform additional business logic or validations for the order
     # ... perform calculations, generate invoices, send notifications, etc.

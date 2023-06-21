@@ -3,15 +3,42 @@ from jsonfield import JSONField
 from apps.customers.models import CustomerProfile
 
 class Product(models.Model):
-    name = models.CharField(max_length=100)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    # Additional fields for product
+    order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='order_products')
+    product_id = models.IntegerField()
+    product_code = models.CharField(max_length=20)
+    sku_id = models.IntegerField()
+    name = models.CharField(max_length=255)
+    product_total = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.IntegerField()
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
+    product_delivery_time = models.CharField(max_length=255)
+    image = models.URLField()
+    brand = models.CharField(max_length=255, null=True)
+    category = models.CharField(max_length=255)
+    external_id_product = models.IntegerField(null=True)
+    external_id_sku = models.IntegerField(null=True)
+    is_kit = models.BooleanField()
+    products_kit = models.JSONField(null=True)
+    sku_code = models.CharField(max_length=20, null=True)
+    product_cross_docking = models.IntegerField()
+    attributes = models.ManyToManyField('Attribute', related_name='products')
+    # ... define other relevant fields for the product
+
+    def __str__(self):
+        return self.name
+
+class Attribute(models.Model):
+    name = models.CharField(max_length=255)
+    value = models.CharField(max_length=255)
     description = models.TextField()
-    # ...    
+
+    def __str__(self):
+        return self.name 
 
 class Order(models.Model):
     idQueue = models.IntegerField()
-    deliveryTime = models.IntegerField(null=True)
+    order_deliveryTime = models.IntegerField(null=True)
+    products = models.ManyToManyField(Product, related_name='products_order')
     idOrder = models.IntegerField(null=True)
     dateOrder = models.DateTimeField(null=True)
     nameStatus = models.CharField(max_length=255, null=True)
@@ -21,15 +48,14 @@ class Order(models.Model):
     shippingCompany = models.CharField(max_length=255, null=True)
     shippingMode = models.CharField(max_length=255, null=True)
     group = models.CharField(max_length=255, null=True)
-    crossDocking = models.IntegerField(null=True)
-    orderItems = JSONField(null=True)
+    order_crossDocking = models.IntegerField(null=True)
     nameShipping = models.CharField(max_length=255, null=True)
     historyListOrderStatus = JSONField(null=True)
     codigoExternoFrete = models.CharField(max_length=255, null=True)
     
 
     #dados financeiros
-    total = models.DecimalField(max_digits=15, decimal_places=2, null=True)
+    order_total = models.DecimalField(max_digits=15, decimal_places=2, null=True)
     totalShipping = models.DecimalField(max_digits=15, decimal_places=2, null=True)
     totalDiscount = models.DecimalField(max_digits=15, decimal_places=2, null=True)
     totalItens = models.DecimalField(max_digits=15, decimal_places=2, null=True)
@@ -101,5 +127,5 @@ class Order(models.Model):
     paymentFormDescription = models.CharField(max_length=255, null=True)
 
     def __str__(self):
-        return f"Order {self.pk}"
+        return f"{self.idOrder}"
     
