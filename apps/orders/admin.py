@@ -3,8 +3,9 @@ from apps.orders.models import Order, OrderByClient
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    pass
-
+    list_display =("idQueue","idOrder","nameStatus", "idCustomer")
+    list_per_page = 15
+    search_fields = ("idOrder",)
 
 class listandoPedidosPorClientes(admin.ModelAdmin):
     list_display =("idOrder","name","status","registerDate")

@@ -23,7 +23,7 @@ def oAuth2_orders():
     response = requests.post(url, json=payload, headers=headers)
     if response.status_code == 200:
         response_data = response.json()  # Parse the response as JSON
-        #print(response_data.get('access_token'))
+        print(response_data.get('access_token'))
         eToken = response_data.get('access_token')
         get_queue(eToken)
     else:
@@ -49,7 +49,7 @@ def get_queue(eToken):
     if response.status_code == 200:
         response_data = response.json()  # Parse the response as JSON
         
-        #print(response_data)
+        print(response_data)
 
         # Parse the JSON response into a list of dictionaries
         #orders = json.loads(response_data)

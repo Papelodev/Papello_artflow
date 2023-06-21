@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from apps.orders.models import Order, OrderByClient
 
@@ -10,55 +10,41 @@ def request_orders(request):
     url = 'http://localhost:3001/orders'
 
     params = {
-        'email': 'coalacookies@gmail.com',
-        'cpfCnpj': 39653162000164,
+        'email': 'comercial@seudocepramim.com.br',
+        'cpfCnpj': 45752803000130,
     }
 
     response = requests.get(url, params)
-    
-    if response.status_code == 200:
+
+    if response.status_code == 200: 
         dados = response.json()
-        print(dados[0])
+        print(dados)
 
-        order_by_client = OrderByClient(
-            idOrder=dados[0]['idOrder'],
-            status=dados[0]['status'],
-            total=dados[0]['total'],
-            totalItems=dados[0]['totalItems'],
-            totalDiscount=dados[0]['totalDiscount'],
-            quantityItems=dados[0]['quantityItems'],
-            document=dados[0]['document'],
-            name=dados[0]['name'],
-    )
-
-        order_by_client.save()
+        for dado in dados:
+            order_by_client = OrderByClient(
+                idOrder=dado['idOrder'],
+                status=dado['status'],
+                total=dado['total'],
+                totalItems=dado['totalItems'],
+                totalDiscount=dado['totalDiscount'],
+                quantityItems=dado['quantityItems'],
+                document=dado['document'],
+                name=dado['name']
+            )
+            order_by_client.save()
 
         return HttpResponse('Dados da API obtidos com sucesso!')
     else:
         return HttpResponse('Falha ao obter dados da API')
 
 
-def request_all_orders(request):
-        url = 'http://localhost:3001/'
+def meus_pedidos(request):
+    pedidos = Order.objects.order_by("idOrder")
 
-        response = requests.get(url)
-        if response.status_code == 200:
-            dados = response.json()
-            print(dados[0])
+    print(pedidos)
+    return render(request, 'orders/meus_pedidos.html', {"pedidos": pedidos})
 
-            order = Order(
-            idQueue = dados[0]['idQueue'],
-            idOrder=dados[0]['entity'],
-            status=dados[0]['status'],
-            total=dados[0]['total'],
-            totalItems=dados[0]['totalItems'],
-            totalDiscount=dados[0]['totalDiscount'],
-            quantityItems=dados[0]['quantityItems'],
-            document=dados[0]['document'],
-            name=dados[0]['name'],
-    )
-            order.save()
+def detalhe_pedido(request, idOrder):
+    pedido = get_object_or_404(Order, idOrder=idOrder)
 
-            return HttpResponse('Dados da API obtidos com sucesso!')
-        else:
-            return HttpResponse('Falha ao obter dados da API')
+    return render(request, 'orders/detalhe_pedido.html', {'pedido': pedido})

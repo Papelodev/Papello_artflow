@@ -58,6 +58,16 @@ class CadastroForms(forms.Form):
             }
         )
     )
+    id_cliente= forms.IntegerField(
+        label="Id de Cliente",
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class":"form-control",
+                "placeholder": "Ex: 109898"
+            }
+        )
+    )
     senha_1=forms.CharField(
         label="Senha",
         required=True,
