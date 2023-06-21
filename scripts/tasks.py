@@ -3,11 +3,12 @@ from django_q.tasks import async_task
 from dotenv import load_dotenv
 from datetime import datetime
 from django.contrib.auth.models import User
+from apps.usuarios.models import MyUser
 from django.conf import settings
 from apps.orders.models import Order, Product, Attribute
 from apps.customers.models import CustomerProfile
-from datetime import datetime
-from django.core.management.utils import get_random_secret_key
+
+
 load_dotenv()
 
 def oAuth2_orders():  
@@ -80,6 +81,7 @@ def get_queue(eToken):
         print(response.json().get('message'))
         
 def handle_order_created(json_data, products):
+    
     # Parse the JSON data
     order_data = json_data
     order_items = products
@@ -92,6 +94,7 @@ def handle_order_created(json_data, products):
     if birth_date_str:
         try:
             birth_date = datetime.strptime(birth_date_str, '%Y-%m-%dT%H:%M:%S').date()
+            
         except ValueError:
         # Handle the case where the date format is invalid
         # Set birth_date to None or a default value depending on your requirements
@@ -111,7 +114,7 @@ def handle_order_created(json_data, products):
     nameCustomer=order_data['nameCustomer'],
     phone1=order_data['phone1'],
     phone2=order_data['phone2'],
-    birthDate=birth_date,
+    #birthDate=birth_date,
     typeCustomer=order_data['typeCustomer'],
     address=order_data['address'],
     billingAddress=order_data['billingAddress'],
@@ -196,15 +199,15 @@ def handle_order_created(json_data, products):
     orderType = order_data.get("orderType")
    
     
-
+    
     # ... extract other relevant information from the JSON data
 
     # Check if the customer already exists or create a new user and customer
     try:
-        user = User.objects.get(email=customer_email)
-    except User.DoesNotExist:
+        user = MyUser.objects.get(email=customer_email)
+    except MyUser.DoesNotExist:
         # Create a new user
-        user = User.objects.create_user(
+        user = MyUser.objects.create_user(
             username=customer_email,
             email=customer_email,
             password=settings.DEFAULT_USER_PASSWORD  # Set a default password
@@ -217,17 +220,17 @@ def handle_order_created(json_data, products):
         customer = CustomerProfile.objects.create(
             user=user,
             email=customer_email,
-            idCustomer = idCustomer,
-            nameCustomer = nameCustomer,
-            phone1=phone1,
-            phone2=phone2,
-            birthDate=birthDate,
-            typeCustomer=typeCustomer,
-            address=address,
-            billingAddress=billingAddress,
-            gender=gender,
-            cpf_cnpj=cpf_cnpj,
-            rg_ie=rg_ie,
+            idCustomer = idCustomer[0],
+            nameCustomer = nameCustomer[0],
+            phone1=phone1[0],
+            phone2=phone2[0],
+            birthDate=birth_date,
+            typeCustomer=typeCustomer[0],
+            address=address[0],
+            billingAddress=billingAddress[0],
+            gender=gender[0],
+            cpf_cnpj=cpf_cnpj[0],
+            rg_ie=rg_ie[0],
             customerExternalId=customerExternalId,
             #custom fields below
             
@@ -238,7 +241,7 @@ def handle_order_created(json_data, products):
     # Create a new instance of the order
     order = Order.objects.create(
         idOrder=order_id,
-        customer=customer,
+        #customer=customer,
         # ... set other order fields based on the extracted data
     )
 
@@ -267,7 +270,7 @@ def handle_order_created(json_data, products):
         skuCode = product_data.get("skuCode")
         product_crossDocking = product_data.get("crossDocking")
        
-
+        
         # Create a new instance of the product and associate it with the order
         product = Product.objects.create(
             order=order,

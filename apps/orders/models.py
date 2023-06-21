@@ -36,7 +36,7 @@ class Attribute(models.Model):
         return self.name 
 
 class Order(models.Model):
-    idQueue = models.IntegerField()
+    idQueue = models.IntegerField(null=True)
     order_deliveryTime = models.IntegerField(null=True)
     products = models.ManyToManyField(Product, related_name='products_order')
     idOrder = models.IntegerField(null=True)

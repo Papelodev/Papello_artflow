@@ -16,7 +16,7 @@ class CustomerProfile(models.Model):
     gender = models.CharField(max_length=10)
     cpf_cnpj = models.CharField(max_length=20)
     rg_ie = models.CharField(max_length=20)
-    customerExternalId = models.CharField(max_length=255)
+    customerExternalId = models.CharField(max_length=255, null=True)
 
     def __str__(self):
         return self.nameCustomer

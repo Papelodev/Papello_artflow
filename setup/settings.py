@@ -15,6 +15,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from django.core.management.utils import get_random_secret_key
 
 load_dotenv()
 
@@ -116,6 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'usuarios.MyUser'
+DEFAULT_USER_PASSWORD = get_random_secret_key()
 
 
 # Internationalization
