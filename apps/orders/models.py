@@ -1,17 +1,18 @@
 from django.db import models
 from jsonfield import JSONField
-from apps.customers.models import CustomerProfile
+
 
 class Product(models.Model):
-    order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='order_products')
+    #order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='order_products')
+    idOrderItem = models.IntegerField()
     product_id = models.IntegerField()
     product_code = models.CharField(max_length=20)
     sku_id = models.IntegerField()
-    name = models.CharField(max_length=255)
+    product_name = models.CharField(max_length=255)
     product_total = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.IntegerField()
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)
-    product_delivery_time = models.CharField(max_length=255)
+    product_delivery_time = models.CharField(max_length=255,null=True)
     image = models.URLField()
     brand = models.CharField(max_length=255, null=True)
     category = models.CharField(max_length=255)
@@ -25,7 +26,7 @@ class Product(models.Model):
     # ... define other relevant fields for the product
 
     def __str__(self):
-        return self.name
+        return self.product_name
 
 class Attribute(models.Model):
     name = models.CharField(max_length=255)
@@ -36,9 +37,10 @@ class Attribute(models.Model):
         return self.name 
 
 class Order(models.Model):
+   
     idQueue = models.IntegerField(null=True)
     order_deliveryTime = models.IntegerField(null=True)
-    products = models.ManyToManyField(Product, related_name='products_order')
+    products = models.ManyToManyField(Product)
     idOrder = models.IntegerField(null=True)
     dateOrder = models.DateTimeField(null=True)
     nameStatus = models.CharField(max_length=255, null=True)
@@ -68,8 +70,11 @@ class Order(models.Model):
     idPaymentBrand = models.IntegerField(null=True)
     orderPayment = JSONField(null=True)
     namePaymentMethodGateway = models.CharField(max_length=255, null=True)
+    paymentDate = models.DateTimeField(null=True)
+    paymentFormId = models.IntegerField(null=True)
+    paymentFormDescription = models.CharField(max_length=255, null=True)
 
-    #qualquer coisa teste
+
 
     #customer data
     idCustomer = models.IntegerField(null=True)
@@ -122,9 +127,6 @@ class Order(models.Model):
     recurrentSelectedTime = models.DateTimeField(null=True)
     descricaoDetalhada = models.TextField(null=True)
     expirationDate = models.DateTimeField(null=True)
-    paymentDate = models.DateTimeField(null=True)
-    paymentFormId = models.IntegerField(null=True)
-    paymentFormDescription = models.CharField(max_length=255, null=True)
 
     def __str__(self):
         return f"{self.idOrder}"

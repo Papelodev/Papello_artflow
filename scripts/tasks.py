@@ -240,10 +240,76 @@ def handle_order_created(json_data, products):
 
     # Create a new instance of the order
     order = Order.objects.create(
+        idQueue=idQueue,
         idOrder=order_id,
-        #customer=customer,
+        dateOrder=dateOrder,
+        nameStatus=nameStatus,
+        historyListOrderStatus=historyListOrderStatus,
+        b2bB2c=b2bB2c,
+        idSeller=idSeller,
+        orderNotes=orderNotes,
+        order_deliveryTime=order_deliveryTime,
+        order_crossDocking=order_crossDocking,
+        codigoExternoFrete=codigoExternoFrete,
+        nameShipping=nameShipping,
+        deliveryShipping=deliveryShipping,
+        idShipping=idShipping,
+        idShippingHub=idShippingHub,
+        shippingCompany=shippingCompany,
+        shippingMode=shippingMode,
+        shippingRegister=shippingRegister,
+        usefulDay=usefulDay,
+        nameCarrying=nameCarrying,
+        trackingLink=trackingLink,
+        paymentDate=paymentDate,
+        order_total=order_total,
+        totalShoppingVoucher=totalShoppingVoucher,
+        totalItens=totalItens,
+        totalInstallment=totalInstallment,
+        totalShipping=totalShipping,
+        totalDiscount=totalDiscount,
+        numberOfInstallments=numberOfInstallments,
+        valueOfInstallment=valueOfInstallment,
+        namePaymentMethodGateway=namePaymentMethodGateway,
+        idTypePayment=idTypePayment,
+        orderPayment=orderPayment,
+        paymentFormId=paymentFormId,
+        paymentFormDescription=paymentFormDescription,
+        idPaymentType=idPaymentType,
+        idAdminCard=idAdminCard,
+        cardAuthorizationCode=cardAuthorizationCode,
+        cardNsu=cardNsu,
+        billNumber=billNumber,
+        proofOfSale=proofOfSale,
+        idPaymentBrand=idPaymentBrand,
+        codeBank=codeBank,
+        nameBank=nameBank,
+        agency=agency,
+        checkingAccount=checkingAccount,
+        creditCardFlag=creditCardFlag,
+        paymentLink=paymentLink,
+        recurrentCodePlan=recurrentCodePlan,
+        recurrentSelectedTime=recurrentSelectedTime,
+        interestValue=interestValue,
+        idCustomer=idCustomer[0],
+        nameCustomer=nameCustomer[0],
+        phone1=phone1[0],
+        phone2=phone2[0],
+        birthDate=birth_date,
+        typeCustomer=typeCustomer[0],
+        address=address[0],
+        billingAddress=billingAddress[0],
+        gender=gender[0],
+        cpf_cnpj=cpf_cnpj[0],
+        rg_ie=rg_ie[0],
+        customerExternalId=customerExternalId,
+        email=customer_email
+        
+
+
         # ... set other order fields based on the extracted data
     )
+    customer.orders.add(order)
 
     # Process the order items
     for order_item in order_items:
@@ -271,28 +337,29 @@ def handle_order_created(json_data, products):
         product_crossDocking = product_data.get("crossDocking")
        
         
+        
         # Create a new instance of the product and associate it with the order
         product = Product.objects.create(
-            order=order,
+           #order=order,
             idOrderItem=idOrderItem,
             product_id=product_id,
-            productCode=productCode,
-            product_name=product_name,
-            nameProduct=nameProduct,
-            idSku=idSku,
+            product_code=productCode,
+            product_name=nameProduct,
+            #nameProduct=nameProduct,
+            sku_id=idSku,
             quantity=quantity,
-            unitPrice=unitPrice,
+            unit_price=unitPrice,
             product_total=product_total,
-            product_deliveryTime=product_deliveryTime,
+            product_delivery_time=product_deliveryTime,
             image=image,
             brand=brand,
             category=category,
-            externalIdProduct=externalIdProduct,
-            externalIdSku=externalIdSku,
-            isKit=isKit,
-            productsKit=productsKit,
-            skuCode=skuCode,
-            product_crossDocking=product_crossDocking,            
+            external_id_product=externalIdProduct,
+            external_id_sku=externalIdSku,
+            is_kit=isKit,
+            products_kit=productsKit,
+            sku_code=skuCode,
+            product_cross_docking=product_crossDocking,            
 
             # ... set other product fields based on the extracted data
         )

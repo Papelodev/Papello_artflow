@@ -34,7 +34,7 @@ class Arte(models.Model):
     )),
     ]
 
-    customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, null=True)
+    customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, null=True, related_name='arte_order')
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
     status = models.CharField(max_length=100, choices=STATUS, default='ENVIO-AGUARDANDO')
     idCustomer = models.IntegerField(null=False, blank = False)
