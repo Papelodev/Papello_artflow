@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 
 from apps.usuarios.forms import LoginForms, CadastroForms
 
+from apps.usuarios.models import MyUser
+
 from django.contrib.auth.models import User
 
 from django.contrib import auth, messages
@@ -25,7 +27,7 @@ def login(request):
             if usuario is not None:
                 auth.login(request, usuario)
                 messages.success(request,f"{nome} logado com sucesso")
-                return redirect('index')
+                return redirect('meus_pedidos')
             else:
                 messages.error(request,"Erro ao efetuar Login")
                 return redirect('login')
@@ -46,17 +48,22 @@ def cadastro(request):
         nome=form["nome_cadastro"].value()
         email=form["email"].value()
         senha=form["senha_1"].value()
+        id_cliente=form["id_cliente"].value()
+        cpf_cnpj=form["cpf"].value()
 
-        if  User.objects.filter(username=nome).exists():
+        if  MyUser.objects.filter(username=nome).exists():
             messages.error(request,"Usuário já existente")
             return redirect('cadastro')
         
-        usuario = User.objects.create_user(
+        usuario = MyUser.objects.create_user(
             username=nome,
             email=email,
-            password=senha
+            password=senha,
+            idCustomer=id_cliente,
+            cpf_cnpj=cpf_cnpj,
         )
         usuario.save()
+
         messages.success(request, "cadastro efetuado com sucesso")
         return redirect('login')
 

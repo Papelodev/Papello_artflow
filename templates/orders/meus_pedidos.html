@@ -11,12 +11,14 @@
                 <div class="card__info">
                     <p class="card__titulo">ID do Pedido: {{pedido.idOrder}}</p>
                     <p class ="card_client_name">Nome do Cliente: {{pedido.nameCustomer}}</p>
+                    <p class="carad_data">Data do pedido: {{pedido.dateOrder}}</p>
                     <p class="card_status">Status do Pedido: {{pedido.nameStatus}}</p>
                     <p class ="card_total">Total: {{pedido.total}}</p>
                 </div>
                 </a>
             </li>
-        </a>    {% endfor %}
+        </a> 
+        {% endfor %}
     </ul>
     {% else %}
     <div>

@@ -1,1 +1,33 @@
-<h1>Detalhe Pedido</h1>
+{% extends 'shared/base.html' %}
+{% load static %}
+{% block content %}
+
+{% if pedido %}
+<div class="card" >
+    <h1 class="cards__titulo" style="text-align: center;">Detalhe Pedido</h1>
+    <div class="card__info">
+        <p class="card__titulo">ID do Pedido: {{pedido.idOrder}}</p>
+        <p>Data do pedido: {{pedido.dateOrder}}</p>
+        <p>Items do pedido: </p>
+        <p>Status : {{pedido.nameStatus}}</p>
+        {% for item in pedido.orderItems %}
+            <ul>
+                <li> - {{ item.nameProduct }}</li>
+                <p>Quantidade : {{item.quantity}}</p>
+            </ul>
+        {% endfor %}
+        <p>Total : {{pedido.total}}</p>
+        <p class="card__titulo">Endereço para entrega:</p>
+        <p>Rua: {{pedido.address.streetAddress}}</p>
+        <p >Número: {{pedido.address.number}}</p>
+        <p>Bairro: {{pedido.address.neighbourhood}}</p>
+        <p>Cidade: {{pedido.address.city}}</p>
+        <p>UF: {{pedido.address.state}}</p>
+        <p>Quem recebe: {{pedido.address.receiver}}</p>
+    </div>
+        {% if pedido.nameStatus == "Aprovado" %}
+        <button class="btn btn-success col-12" style="width: 40%;">Personalize aqui!</button>
+        {% endif %}
+</div>
+{% endif %}
+{% endblock %}

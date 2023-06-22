@@ -252,6 +252,7 @@ table {
 .menu-lateral {
     padding-right: 1.5rem;
     box-sizing: border-box;
+    margin-left: 1.5rem;
     min-width: 270px;
 }
 
@@ -277,12 +278,13 @@ table {
 
 .menu-lateral__navegacao img {
     margin-right: 1.5rem;
+
 }
 
 .pagina-inicial {
     max-width: 1440px;
     /*padding: 1.5rem;*/
-    margin: 0 auto;
+    /* margin: 0 auto; */
 }
 
 .populares {

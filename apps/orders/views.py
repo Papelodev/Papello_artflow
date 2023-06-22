@@ -1,10 +1,12 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from apps.orders.models import Order, OrderByClient
 
 from django.http import HttpResponse
 
 import requests
+
+from django.contrib import auth, messages
 
 def request_orders(request):
     url = 'http://localhost:3001/orders'
@@ -39,12 +41,16 @@ def request_orders(request):
 
 
 def meus_pedidos(request):
-    pedidos = Order.objects.order_by("idOrder")
-
+    if not request.user.is_authenticated:
+        messages.error(request, "Usuário não logado!")
+        return redirect('login')
+    
+    idCustomer = request.user.idCustomer
+    pedidos = Order.objects.order_by("idOrder").filter(idCustomer=idCustomer)
     print(pedidos)
     return render(request, 'orders/meus_pedidos.html', {"pedidos": pedidos})
 
 def detalhe_pedido(request, idOrder):
     pedido = get_object_or_404(Order, idOrder=idOrder)
-
+    print(pedido.dateOrder)
     return render(request, 'orders/detalhe_pedido.html', {'pedido': pedido})
