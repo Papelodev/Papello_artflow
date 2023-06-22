@@ -10,6 +10,7 @@ urlpatterns = [
     path('', include('apps.galeria.urls')),
     path('',include('apps.usuarios.urls')),
     path('', include('apps.orders.urls')),
+    path('', include('artCustomization.urls')),
 ] 
 
 if settings.DEBUG:

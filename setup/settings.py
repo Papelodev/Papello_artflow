@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'apps.galeria.apps.GaleriaConfig',
     'apps.usuarios.apps.UsuariosConfig',
     'apps.orders.apps.OrdersConfig',
+    'artCustomization.apps.ArtcustomizationConfig',
     'storages', 
     'django_q',
     'requests',
