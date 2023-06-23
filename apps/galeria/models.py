@@ -29,3 +29,16 @@ class Fotografia(models.Model):
 
     def __str__(self):
         return  self.nome
+    
+class Artes(models.Model):
+
+    descricao =  models.TextField(null=False, blank=False)
+    foto = models.ImageField(upload_to= "artes/", blank=True)
+    idCustomer = models.CharField(null=True, max_length=20)
+    idOrder = models.CharField(null=True,  max_length=20)
+
+    def __str__(self):
+        return  self.descricao
+
+    def set_customer(self, customer):
+        self.idCustomer.set([customer])

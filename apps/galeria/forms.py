@@ -1,5 +1,5 @@
 from django import forms
-from apps.galeria.models import Fotografia
+from apps.galeria.models import Fotografia, Artes
 
 class FotografiaForms(forms.ModelForm):
     class Meta:
@@ -25,4 +25,18 @@ class FotografiaForms(forms.ModelForm):
                     }
                 ),
             'usuario':forms.Select(attrs={'class':'form-control'}),
+        }
+
+class ArteForms(forms.ModelForm):
+    class Meta:
+        model = Artes
+        exclude = ['idCustomer', 'idOrder']
+        labels ={
+            'descricao':'Envie aqui todo tipo de referência de mídia  para a confecção da arte',
+            'foto': 'Envie aqui todo tipo de referência de mídia  para a confecção da arte do produto'
+        }
+
+        widgets = {
+            'descricao':forms.Textarea(attrs={'class':'form-control'}),
+            'foto':forms.FileInput(attrs={'class':'form-control'}),
         }
