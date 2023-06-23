@@ -9,6 +9,7 @@
             {% for item in pedido.orderItems %}
             <img src="{{item.image}}" style="width: 20%; border-radius: 30px;"></img>
             <p>{{item.nameProduct}}</p>
+
             {% if item.isKit %}
             <p style="font-size: 15px;">O kit contém:</p>
             {% for product in item.productsKit %}
@@ -23,15 +24,22 @@
                     {% endfor %}
                 </select>
             </label>
-        </br>
+            {% else %}
+            <p>Para esse produto você pode selecionar até {{pedido.orderItems|length}} arte(s).</p>
             <label>
-                Clique aqui para enviar sua arte
-                <input type="file"  style="width: 60%;"></input>
+                Selecione quantas artes para esse produto:
+                <select>
+                    <option>0</option>
+                    {% for item in pedido.orderItems %}
+                    <option>{{ forloop.counter }}</option>
+                    {% endfor %}
+                </select>
             </label>
             {% endif %}
+        </br>
             {% endfor %}
         </div>
-        <button class="btn btn-success col-12" style="width: 50%;">Próximo</button>
+        <a href="{% url 'envio_de_arte' pedido.idOrder %}" style="width: 50%;"><button class="btn btn-success col-12" >Próximo</button></a>
     {% endif %}
 </div>
 {% endblock %}

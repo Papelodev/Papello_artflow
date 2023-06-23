@@ -186,3 +186,7 @@ def get_queue(eToken):
         print('Error:', response.status_code)
         print(response.json().get('message'))
         
+def delete_orders():
+    orders = Order.objects.all()
+
+    orders.delete()

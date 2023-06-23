@@ -1,0 +1,44 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="card" style="display: flex; flex-direction: column; align-items: center; padding: 5%;">
+    <h1 class="cards__titulo">Agora vamos á personalização, para seu Produdo</h1>
+    {% if pedido %}
+        <div class="card__info" style="display: flex; flex-direction: column;" >
+            {% for item in pedido.orderItems %}
+            <img src="{{item.image}}" style="width: 20%; border-radius: 30px; margin-right: 5%;"></img>
+            {% if item.isKit %}
+            <div>
+            <p>{{item.nameProduct}}</p>
+            {% for product in item.productsKit %}
+            <p style="font-size: 15px;">-{{ product.name }}</p>
+            <textarea placeholder="Escreva neste campo todo tipo de instrução referente à confeccção de sua arte, quanto mais detalhes melhor, lembre-se que você terá direito a apenas X alterações..."
+            style="width: 100%; height: 150px;"
+            ></textarea>
+            <label>
+            <p>Envie aqui todo tipo de referência de mídia  para a confecção da arte</p>
+            <input type="file">
+            </label>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div>
+            <p>{{item.nameProduct}}</p>
+            <textarea placeholder="Escreva neste campo todo tipo de instrução referente à confeccção de sua arte, quanto mais detalhes melhor, lembre-se que você terá direito a apenas X alterações..."
+            style="width: 100%; height: 150px;"
+            ></textarea>
+            <label>
+            <p>Envie aqui todo tipo de referência de mídia  para a confecção da arte</p>
+            <input type="file">
+            </label>
+            </div>
+            {% endif %}
+        </br>
+            {% endfor %}
+            <a href="{% url 'envio_da_arte'%}"><button class="btn btn-success col-12" style="width: 50%;">Próximo</button></a>
+        </div>
+
+    {% endif %}
+</div>
+{% endblock %}

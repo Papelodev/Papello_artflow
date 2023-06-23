@@ -3,7 +3,7 @@ from apps.usuarios.models import MyUser
 from datetime import datetime
 
 class CustomerProfile(models.Model):
-    user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
     email = models.EmailField()
     idCustomer = models.IntegerField()
     nameCustomer = models.CharField(max_length=255)
