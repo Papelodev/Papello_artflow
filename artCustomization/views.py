@@ -5,7 +5,6 @@ from apps.galeria.models import Artes
 from django.contrib import messages
 
 def art_customization(request, idOrder):
-    print(idOrder)
     pedido = get_object_or_404(Order, idOrder=idOrder)
     print(pedido)
     return render(request, 'artCustomization/artCustomization.html', {"pedido": pedido})
@@ -18,13 +17,18 @@ def envio_de_arte(request, idOrder):
         if form.is_valid():
             descricao = request.POST.get('descricao')
             foto = request.FILES.get('foto')
-            idCustomer = request.POST.get('idCustomer')
-            arte = Artes(descricao=descricao, foto=foto, idCustomer=request.user.idCustomer, idOrder= idOrder)
+            idCustomer=request.user.idCustomer
+            print(idCustomer)
+            arte = Artes(descricao=descricao, foto=foto, idCustomer=idCustomer, idOrder= idOrder)
+            print(arte)
             arte.save()
             messages.success(request, 'Muito Obrigado! Te avisaremos se precisarmos de mais alguma coisa')
-            return redirect('arte_enviada')
+            return redirect("arte_enviada")
     form = ArteForms(request.POST, request.FILES)
     return render(request, 'artCustomization/envio_de_arte.html', {"pedido": pedido, "form": form} )
 
 def arte_enviada(request):
     return render(request, 'artCustomization/teste_aviso.html')
+
+def arte_finalizada(request):
+    return render(request, 'artCustomization/arte_finalizada.html')

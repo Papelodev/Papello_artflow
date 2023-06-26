@@ -5,36 +5,42 @@
 <div class="card" style="display: flex; flex-direction: column; align-items: center;">
     <h1 class="cards__titulo">Customização</h1>
     {% if pedido %}
-        <div class="card__info">
+        <div class="card__info" style="display: flex;">
             {% for item in pedido.orderItems %}
             <img src="{{item.image}}" style="width: 20%; border-radius: 30px;"></img>
-            <p>{{item.nameProduct}}</p>
 
             {% if item.isKit %}
-            <p style="font-size: 15px;">O kit contém:</p>
-            {% for product in item.productsKit %}
-            <p style="font-size: 15px;">-{{ product.name }}</p>
-            {% endfor %}
-            <p>Para esse produto você pode selecionar até {{item.productsKit|length}} arte(s).</p>
-            <label>
-                Selecione quantas artes para esse produto:
-                <select>
-                    {% for product in item.productsKit %}
-                    <option>{{ forloop.counter }}</option>
-                    {% endfor %}
-                </select>
-            </label>
+            <div style="display: flex; flex-direction: column; justify-content: center; padding: 20px 20px;">
+                <p>{{item.nameProduct}}</p>
+                <p style="font-size: 15px;">O kit contém:</p>
+                {% for product in item.productsKit %}
+                <p style="font-size: 15px;">-{{ product.name }}</p>
+                {% endfor %}
+                <p>Para esse produto você pode selecionar até {{item.productsKit|length}} arte(s).</p>
+                <label>
+                    Selecione quantas artes para esse produto:
+                    <select>
+                        <option>0</option>
+                        {% for product in item.productsKit %}
+                        <option>{{ forloop.counter }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
             {% else %}
-            <p>Para esse produto você pode selecionar até {{pedido.orderItems|length}} arte(s).</p>
-            <label>
-                Selecione quantas artes para esse produto:
-                <select>
-                    <option>0</option>
-                    {% for item in pedido.orderItems %}
-                    <option>{{ forloop.counter }}</option>
-                    {% endfor %}
-                </select>
-            </label>
+            <div style="display: flex; flex-direction: column; justify-content: center; padding: 20px 20px;">
+                <p>{{item.nameProduct}}</p>
+                <p>Para esse produto você pode selecionar até {{pedido.orderItems|length}} arte(s).</p>
+                <label>
+                    Selecione quantas artes para esse produto:
+                    <select>
+                        <option>0</option>
+                        {% for item in pedido.orderItems %}
+                        <option>{{ forloop.counter }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
             {% endif %}
         </br>
             {% endfor %}
