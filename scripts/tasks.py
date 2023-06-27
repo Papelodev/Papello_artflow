@@ -5,11 +5,14 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from apps.usuarios.models import MyUser
 from django.conf import settings
-from apps.orders.models import Order, Product, Attribute
+from apps.orders.models import Order, Product, OrderProduct
 from apps.customers.models import CustomerProfile
+from django_q.tasks import schedule
 
 
 load_dotenv()
+processed_orders = []
+
 
 def oAuth2_orders():  
     
@@ -71,8 +74,10 @@ def get_queue(eToken):
                 #product_id = order_item['idOrderItem']
                 
                 #print("Product ID:", product_id)
-            order_data = item['entity']
-            handle_order_created(order_data, order_items)
+           
+            handle_order_created(item, order_items)
+           
+            delete_processed_order(eToken,processed_orders)
             break
 
 
@@ -83,7 +88,8 @@ def get_queue(eToken):
 def handle_order_created(json_data, products):
     
     # Parse the JSON data
-    order_data = json_data
+    idQueue = json_data['idQueue']
+    order_data = json_data['entity']
     order_items = products
 
     # Modify the Date format
@@ -125,7 +131,7 @@ def handle_order_created(json_data, products):
     customer_email = order_data.get("email")
 
     # Extract order details
-    idQueue = order_data.get("idQueue")
+    
     order_id = order_data.get("idOrder")
     dateOrder = order_date
     historyListOrderStatus = order_data.get("historyListOrderStatus")
@@ -210,7 +216,8 @@ def handle_order_created(json_data, products):
         user = MyUser.objects.create_user(
             username=customer_email,
             email=customer_email,
-            password=settings.DEFAULT_USER_PASSWORD  # Set a default password
+            password=settings.DEFAULT_USER_PASSWORD,  # Set a default password
+            user_type = 1
         )
 
     try:
@@ -240,6 +247,7 @@ def handle_order_created(json_data, products):
 
     # Create a new instance of the order
     order = Order.objects.create(
+        customer=customer,
         idQueue=idQueue,
         idOrder=order_id,
         dateOrder=dateOrder,
@@ -290,6 +298,7 @@ def handle_order_created(json_data, products):
         paymentLink=paymentLink,
         recurrentCodePlan=recurrentCodePlan,
         recurrentSelectedTime=recurrentSelectedTime,
+
         interestValue=interestValue,
         idCustomer=idCustomer[0],
         nameCustomer=nameCustomer[0],
@@ -303,13 +312,27 @@ def handle_order_created(json_data, products):
         cpf_cnpj=cpf_cnpj[0],
         rg_ie=rg_ie[0],
         customerExternalId=customerExternalId,
-        email=customer_email
+        email=customer_email,
         
+        expirationDate=expirationDate,
+        group=group,
+        externalId=externalId,
+        marketPlaceNumberOrder=marketPlaceNumberOrder,
+        marketPlaceID=marketPlaceID,
+        marketPlaceName=marketPlaceName,
+        marketPlaceDateCreated=marketPlaceDateCreated,
+        marketPlaceStore=marketPlaceStore,
+        originApp=originApp,
+        orderZapcommerce=orderZapcommerce,
+        orderCD=orderCD,
+        sellerCode=sellerCode,
+        descricaoDetalhada=descricaoDetalhada,
+        orderType=orderType
 
 
         # ... set other order fields based on the extracted data
     )
-    customer.orders.add(order)
+    
 
     # Process the order items
     for order_item in order_items:
@@ -335,50 +358,77 @@ def handle_order_created(json_data, products):
         productsKit = product_data.get("productsKit")
         skuCode = product_data.get("skuCode")
         product_crossDocking = product_data.get("crossDocking")
+        attributes = product_data.get("attributes")
        
-        
-        
-        # Create a new instance of the product and associate it with the order
-        product = Product.objects.create(
-           #order=order,
-            idOrderItem=idOrderItem,
-            product_id=product_id,
-            product_code=productCode,
-            product_name=nameProduct,
-            #nameProduct=nameProduct,
-            sku_id=idSku,
-            quantity=quantity,
-            unit_price=unitPrice,
-            product_total=product_total,
-            product_delivery_time=product_deliveryTime,
-            image=image,
-            brand=brand,
-            category=category,
-            external_id_product=externalIdProduct,
-            external_id_sku=externalIdSku,
-            is_kit=isKit,
-            products_kit=productsKit,
-            sku_code=skuCode,
-            product_cross_docking=product_crossDocking,            
+        #check existing product
+        product = Product.objects.filter(product_code=productCode).first()
+        if not product:            
+            # Create a new instance of the product and associate it with the order
+            product = Product.objects.create(
+            
+               
 
-            # ... set other product fields based on the extracted data
-        )
-        order.products.add(product)
+                product_id=product_id,
+                product_code=productCode,
+                product_name=nameProduct,
+                product_name_html = product_name,
+                sku_id=idSku,
+                unit_price=unitPrice,
+                product_total=product_total,
+                product_delivery_time=product_deliveryTime,
+                image=image,
+                brand=brand,
+                category=category,
+                external_id_product=externalIdProduct,
+                external_id_sku=externalIdSku,
+                is_kit=isKit,
+                products_kit=productsKit,
+                sku_code=skuCode,
+                product_cross_docking=product_crossDocking,    
+                attributes=attributes    
 
-        attributes_data = order_item.get('attribute', [])
-        for attribute_data in attributes_data:
-            attribute = Attribute.objects.create(
-                name=attribute_data.get('nameAttribute'),
-                value=attribute_data.get('value'),
-                description=attribute_data.get('description')
+                # ... set other product fields based on the extracted data
+            )
+            
+
+         
+
+        order_product = OrderProduct.objects.create(
+            customer=customer,
+            product=product,
+            quantity = quantity,
+            idOrderItem=idOrderItem
         )
-            product.attributes.add(attribute)
+        order.products.add(order_product)
+       
 
     # Perform additional business logic or validations for the order
     # ... perform calculations, generate invoices, send notifications, etc.
 
     # Save the changes in the database
     order.save()
+    processed_orders.append({"idQueue": order.idQueue})
 
     # Trigger further actions or notifications if needed
     # ... notify the customer, update analytics, trigger downstream processes, etc.
+
+def delete_processed_order(token, processed_orders):
+
+
+    
+    print("delete_processed_order called", processed_orders)
+    url = "https://adm-pedido-neo1.plataformaneo.com.br/api/v1/adm_order/DeleteQueue?integrationKey="+str(os.getenv('INTEGRATION_KEY'))
+
+    payload=processed_orders
+        
+    headers = {
+        "accept": "application/json",
+        "content-type": "application/json",
+        "authorization": "Bearer "+ token
+    }
+
+    response = requests.post(url,json=payload, headers=headers)
+
+    print(response.text)
+
+

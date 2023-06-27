@@ -1,6 +1,6 @@
 from django.db import models
 from apps.usuarios.models import MyUser
-from apps.orders.models import Order
+#from apps.orders.models import Order
 from datetime import datetime
 
 class CustomerProfile(models.Model):
@@ -18,7 +18,7 @@ class CustomerProfile(models.Model):
     cpf_cnpj = models.CharField(max_length=20)
     rg_ie = models.CharField(max_length=20)
     customerExternalId = models.CharField(max_length=255, null=True)
-    orders = models.ManyToManyField(Order, related_name='customers')  # New field to accumulate multiple orders
+    #orders = models.ManyToManyField(Order, related_name='customers')  # New field to accumulate multiple orders
 
     def __str__(self):
         return self.nameCustomer

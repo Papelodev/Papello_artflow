@@ -200,20 +200,12 @@ MESSAGE_TAGS = {
 
 #Django-q
 
+
+
 # settings.py example
 Q_CLUSTER = {
-    'name': 'artflow',
-    'workers': 8,
-    'recycle': 500,
-    'retry': 180,     # Set a larger value for retry (in seconds)
-    'timeout': 120,   # Set a smaller value for timeout (in seconds)
-    'compress': True,
-    'cpu_affinity': 1,
-    'save_limit': 250,
-    'queue_limit': 500,
-    'label': 'Django Q',
-    'redis': {
-        'host': '127.0.0.1',
-        'port': 6379,
-        'db': 0, }
+    'name': 'DJRedis_ARTFLOW',
+    'workers': 4,
+    'timeout': 90,
+    'django_redis': 'default'
 }

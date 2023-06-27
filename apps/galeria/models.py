@@ -3,8 +3,7 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from django.conf import settings
 from functools import partial
-from apps.customers.models import CustomerProfile
-from apps.orders.models import Order
+
 
 
 
@@ -34,11 +33,11 @@ class Arte(models.Model):
     )),
     ]
 
-    customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, null=True, related_name='arte_order')
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
+ 
     status = models.CharField(max_length=100, choices=STATUS, default='ENVIO-AGUARDANDO')
     idCustomer = models.IntegerField(null=False, blank = False)
     idOrder = models.IntegerField(null=False, blank = False)
+    idProduct = models.IntegerField(null=False, blank = False)
 
 
 
