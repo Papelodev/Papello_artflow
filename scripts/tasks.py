@@ -90,7 +90,7 @@ def handle_order_created(json_data, products):
     # Parse the JSON data
     idQueue = json_data['idQueue']
     order_data = json_data['entity']
-    order_items = products
+    
 
     # Modify the Date format
     birth_date_str = order_data.get('birthDate', '')  # Assuming the birthDate key is present in order_data
@@ -108,7 +108,7 @@ def handle_order_created(json_data, products):
 
         if order_date_str:
             try:
-                order_date = datetime.strptime(order_date_str, '%Y-%m-%dT%H:%M:%S').date()
+                order_date = datetime.strptime(order_date_str, '%Y-%m-%dT%H:%M:%S.%f').date()
 
 
 
@@ -243,10 +243,11 @@ def handle_order_created(json_data, products):
             
             )
 
-    
+    print("\ndateOrder: ",order_date,order_data.get('dateOrder',''))
 
     # Create a new instance of the order
     order = Order.objects.create(
+        
         customer=customer,
         idQueue=idQueue,
         idOrder=order_id,
@@ -335,39 +336,37 @@ def handle_order_created(json_data, products):
     
 
     # Process the order items
-    for order_item in order_items:
-        product_data = order_item
-
-         # Extract product details
-        idOrderItem = product_data.get("idOrderItem")
-        product_id = product_data.get("idProduct")
-        productCode = product_data.get("productCode")
-        product_name = product_data.get("name")
-        nameProduct = product_data.get("nameProduct")
-        idSku = product_data.get("idSku")
-        quantity = product_data.get("quantity")
-        unitPrice = product_data.get("unitPrice")
-        product_total = product_data.get("total")
-        product_deliveryTime = product_data.get("deliveryTime")
-        image = product_data.get("image")
-        brand = product_data.get("brand")
-        category = product_data.get("category")
-        externalIdProduct = product_data.get("externalIdProduct")
-        externalIdSku = product_data.get("externalIdSku")
-        isKit = product_data.get("isKit")
-        productsKit = product_data.get("productsKit")
-        skuCode = product_data.get("skuCode")
-        product_crossDocking = product_data.get("crossDocking")
-        attributes = product_data.get("attributes")
-       
+    for product in products:
+        
         #check existing product
-        product = Product.objects.filter(product_code=productCode).first()
-        if not product:            
-            # Create a new instance of the product and associate it with the order
-            product = Product.objects.create(
+        quantity = product.get("quantity")
+        productCode = product.get("productCode")
+        idOrderItem = product.get("idOrderItem")
+        product_id = product.get("idProduct")
+        product_name = product.get("name")
+        nameProduct = product.get("nameProduct")
+        idSku = product.get("idSku")
+        unitPrice = product.get("unitPrice")
+        product_total = product.get("total")
+        product_deliveryTime = product.get("deliveryTime")
+        image = product.get("image")
+        brand = product.get("brand")
+        category = product.get("category")
+        externalIdProduct = product.get("externalIdProduct")
+        externalIdSku = product.get("externalIdSku")
+        isKit = product.get("isKit")
+        productsKit = product.get("productsKit")
+        skuCode = product.get("skuCode")
+        product_crossDocking = product.get("crossDocking")
+        attributes = product.get("attributes")
             
-               
+         # Check if the product already exists in the database
+        product_instance = Product.objects.filter(product_id=product_id).first()
 
+        if not product_instance:
+            # Create a new instance of the product
+            print("new product",productCode)        
+            product_instance = Product.objects.create(            
                 product_id=product_id,
                 product_code=productCode,
                 product_name=nameProduct,
@@ -390,23 +389,46 @@ def handle_order_created(json_data, products):
                 # ... set other product fields based on the extracted data
             )
             
-
-         
-
         order_product = OrderProduct.objects.create(
+            order = order,
             customer=customer,
-            product=product,
+            product=product_instance,
             quantity = quantity,
-            idOrderItem=idOrderItem
+            idOrderItem = idOrderItem
         )
-        order.products.add(order_product)
-       
+
+        # Retrieve all order products
+    order_products = OrderProduct.objects.all()
+
+    # Iterate over the order products and display their details
+    for order_product in order_products:
+        # Access the order product's fields
+        order = order_product.order
+        product = order_product.product
+        quantity = order_product.quantity
+        id_order_item = order_product.idOrderItem
+
+        # Display the order product details
+        print(f"Order ID: {order.idOrder}")
+        print(f"Product ID: {product.product_id}")
+        print(f"Quantity: {quantity}")
+        print(f"Order Item ID: {id_order_item}")
+        print("--------------------")
+        
+        
+   
 
     # Perform additional business logic or validations for the order
     # ... perform calculations, generate invoices, send notifications, etc.
-
+ 
+    
     # Save the changes in the database
     order.save()
+
+    order.refresh_from_db()    
+
+
+    
     processed_orders.append({"idQueue": order.idQueue})
 
     # Trigger further actions or notifications if needed

@@ -9,7 +9,6 @@ class Product(models.Model):
     
 
     isCustomizeable = models.BooleanField(default=True)
-
     product_id = models.IntegerField()
     product_code = models.CharField(max_length=20)
     sku_id = models.IntegerField()
@@ -36,20 +35,8 @@ class Product(models.Model):
     def __str__(self):    
         return f" { self.product_code} {self.product_name} {self.category}"
     
-   
-class OrderProduct(models.Model):
-    customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, related_name='OrderProduct')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
-    idOrderItem = models.IntegerField()
-    artes = models.ManyToManyField(Arte)  
-
-    def __str__(self):
-        return f"{self.quantity} {self.product.product_code} {self.product.product_name}"
-
 class Order(models.Model):
     #correlation of fields
-    products = models.ManyToManyField(OrderProduct)
     customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, related_name='orders')
 
     #dados do pedido
@@ -57,6 +44,9 @@ class Order(models.Model):
     order_deliveryTime = models.IntegerField(null=True)
     idOrder = models.IntegerField(null=True)
     dateOrder = models.DateTimeField(null=True)
+
+    
+
     nameStatus = models.CharField(max_length=255, null=True)
     orderType = models.IntegerField(null=True)
     idShipping = models.IntegerField(null=True)
@@ -146,4 +136,16 @@ class Order(models.Model):
     def __str__(self):
         return f"{self.idOrder}"
     
+
+   
+class OrderProduct(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_products')
+    customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, related_name='OrderProduct')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    idOrderItem = models.IntegerField()
+    artes = models.ManyToManyField(Arte)  
+
+    def __str__(self):
+        return f"{self.quantity} {self.product.product_code} {self.product.product_name}"
 

@@ -16,6 +16,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 from django.core.management.utils import get_random_secret_key
+import redis
 
 load_dotenv()
 
@@ -201,11 +202,13 @@ MESSAGE_TAGS = {
 #Django-q
 
 
-
-# settings.py example
 Q_CLUSTER = {
-    'name': 'DJRedis_ARTFLOW',
-    'workers': 4,
-    'timeout': 90,
-    'django_redis': 'default'
+    'redis': {
+        'host': 'redis-13808.c273.us-east-1-2.ec2.cloud.redislabs.com',
+        'port': 13808,
+        'db': 0,
+        'password': os.getenv('REDIS_PASSWORD'),
+        'username': os.getenv('REDIS_USERNAME'),
+        'socket_timeout': 3,
+    },
 }
