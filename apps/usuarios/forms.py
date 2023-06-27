@@ -25,6 +25,13 @@ class LoginForms(forms.Form):
     )
 
 class CadastroForms(forms.Form):
+
+    opcoes = [
+        (1, 'Cliente'),
+        (3, 'Designer'),
+        (4, 'Reviewer'),
+        (5, ''),
+    ]
     nome_cadastro=forms.CharField(
         label="Nome de Cadastro",
         required=True,
@@ -47,6 +54,9 @@ class CadastroForms(forms.Form):
             }
         )
     )
+    tipo_usuario=forms.ChoiceField( 
+        choices=opcoes, widget=forms.Select(attrs={'class': 'select-css'}))
+
     senha_1=forms.CharField(
         label="Senha",
         required=True,

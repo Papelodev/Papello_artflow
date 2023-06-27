@@ -5,7 +5,7 @@ from apps.usuarios.models import MyUser
 class EmployeeProfile(models.Model):
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE, null=True)
     # Additional fields for employee profile
-    employee_id = models.CharField(max_length=50)
+    employee_id = models.CharField(max_length=50 )
     department = models.CharField(max_length=100)
     # ...
 

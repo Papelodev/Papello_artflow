@@ -1,0 +1,43 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+{% block content %}
+
+{% if pedido %}
+<div class="card" style="margin-bottom: 120px;">
+    <h1 class="cards__titulo" style="text-align: center; margin-top: 10px;">Detalhe Pedido</h1>
+    <div class="card__info">
+        <p class="card__titulo">ID do Pedido: {{pedido.idOrder}}</p>
+        <p>Data do pedido: {{pedido.dateOrder}}</p>
+        <p>Status : {{pedido.nameStatus}}</p>
+        <p class="card__titulo">Items do pedido: </p>
+
+        {% for produto in produtos %}
+            <ul>
+                <li> - {{ produto }}</li>
+                {% for orderItem in pedido.orderItems %}
+                {% if orderItem.isKit %}
+                    <p style="font-size: 15px;">O kit contém:</p>
+                  {% for product in orderItem.productsKit %}
+                    <p style="font-size: 15px;">-{{ product.name }}</p>
+                  {% endfor %}
+                {% endif %}
+              {% endfor %}
+                <img src="{{produto.image}}" style="width: 20%; border-radius: 30px; padding: 10px 10px;"></img>
+                <p>Quantidade : {{produto.quantity}}</p>
+            </ul>
+        {% endfor %}
+        <p class="card__titulo">Total : {{pedido.order_total}}</p>
+        <p class="card__titulo">Endereço para entrega:</p>
+        <p>Rua: {{pedido.address.streetAddress}}</p>
+        <p >Número: {{pedido.address.number}}</p>
+        <p>Bairro: {{pedido.address.neighbourhood}}</p>
+        <p>Cidade: {{pedido.address.city}}</p>
+        <p>UF: {{pedido.address.state}}</p>
+        <p>Quem recebe: {{pedido.address.receiver}}</p>
+    </div>
+        {% if pedido.nameStatus == "Aprovado" %}
+        <a href="{% url 'art_customization' pedido.idOrder %}"><button class="btn btn-success col-12" style="width: 40%;">Personalize aqui!</button></a>
+        {% endif %}
+</div>
+{% endif %}
+{% endblock %}

@@ -4,6 +4,8 @@ from apps.usuarios.forms import LoginForms, CadastroForms
 
 from django.contrib.auth.models import User
 
+from apps.usuarios.models import MyUser
+
 from django.contrib import auth, messages
 
 
@@ -47,15 +49,17 @@ def cadastro(request):
         nome=form["nome_cadastro"].value()
         email=form["email"].value()
         senha=form["senha_1"].value()
+        userType=form["tipo_usuario"].value()
 
-        if  User.objects.filter(username=nome).exists():
+        if  MyUser.objects.filter(username=nome).exists():
             messages.error(request,"Usuário já existente")
             return redirect('cadastro')
         
-        usuario = User.objects.create_user(
+        usuario = MyUser.objects.create_user(
             username=nome,
             email=email,
-            password=senha
+            password=senha,
+            user_type=userType,
         )
         usuario.save()
         messages.success(request, "cadastro efetuado com sucesso")

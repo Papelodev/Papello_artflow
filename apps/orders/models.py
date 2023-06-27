@@ -143,6 +143,7 @@ class OrderProduct(models.Model):
     customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, related_name='OrderProduct')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
+    image = models.URLField(null=True)
     idOrderItem = models.IntegerField()
     artes = models.ManyToManyField(Arte)  
 

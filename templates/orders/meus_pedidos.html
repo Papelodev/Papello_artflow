@@ -1,0 +1,29 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+{% block content %}
+<div class="cards">
+    <h1 class="cards__titulo">Meus Pedidos</h1>
+    <ul class="cards__lista">
+    {% if pedidos %}
+    {% for pedido in pedidos %}
+            <li class="card">
+                <a href="{% url 'detalhe_pedido' pedido.idOrder %}" style="text-decoration: none; color: black;">
+                <div class="card__info">
+                    <p class="card__titulo">ID do Pedido: {{pedido.idOrder}}</p>
+                    <p class ="card_client_name">Nome do Cliente: {{pedido.nameCustomer}}</p>
+                    <p class="carad_data">Data do pedido: {{pedido.dateOrder}}</p>
+                    <p class="card_status">Status do Pedido: {{pedido.nameStatus}}</p>
+                </div>
+                </a>
+            </li>
+        </a> 
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div>
+        <h3 style="color: white;">Nenhum pedido encontrado.</h3>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

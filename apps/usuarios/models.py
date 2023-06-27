@@ -11,7 +11,7 @@ class MyUser(AbstractUser):
       (5, 'employee'),
   )
 
-    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES)
+    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, null=True)
 
     def __str__(self):
         return self.username if self.username else ''

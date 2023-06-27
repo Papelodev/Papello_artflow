@@ -393,6 +393,7 @@ def handle_order_created(json_data, products):
             order = order,
             customer=customer,
             product=product_instance,
+            image=image,
             quantity = quantity,
             idOrderItem = idOrderItem
         )
