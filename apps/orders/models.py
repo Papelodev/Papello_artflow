@@ -1,6 +1,5 @@
 from django.db import models
 from jsonfield import JSONField
-from apps.galeria.models import Arte
 from apps.customers.models import CustomerProfile
 
 
@@ -9,8 +8,8 @@ class Product(models.Model):
     
 
     isCustomizeable = models.BooleanField(default=True)
-    product_id = models.IntegerField()
-    product_code = models.CharField(max_length=20)
+    product_id = models.IntegerField() #jet
+    product_code = models.CharField(max_length=20) #papello
     sku_id = models.IntegerField()
     product_name = models.CharField(max_length=255)
     product_name_html = models.CharField(max_length=255)
@@ -144,7 +143,7 @@ class OrderProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     idOrderItem = models.IntegerField()
-    artes = models.ManyToManyField(Arte)  
+   
 
     def __str__(self):
         return f"{self.quantity} {self.product.product_code} {self.product.product_name}"

@@ -2,6 +2,7 @@ from django.db import models
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.conf import settings
+from apps.orders.models import OrderProduct
 from functools import partial
 
 
@@ -38,7 +39,7 @@ class Arte(models.Model):
     idCustomer = models.IntegerField(null=False, blank = False)
     idOrder = models.IntegerField(null=False, blank = False)
     idProduct = models.IntegerField(null=False, blank = False)
-
+    orderProduct = models.ForeignKey(OrderProduct, on_delete=models.CASCADE, related_name='Arte')
 
 
     #referências para confecção
@@ -51,7 +52,7 @@ class Arte(models.Model):
     #Alteração   
     alteracoes = models.CharField(max_length=500, null=False, blank = False)  #instruções de alteração    
     alterafiles = models.ImageField(upload_to=partial(upload_file_path, field_name='alterafiles'), blank=True) #armazena arquivos para alterações    
-    alteracounter = alteracounter = models.PositiveIntegerField(default=0) #conta numero de alterações
+    alteracounter = models.PositiveIntegerField(default=0) #conta numero de alterações
 
     #arquivo final de arte aprovada
     artefinal = models.ImageField(upload_to=partial(upload_file_path, field_name='artefinal'), blank=True)
