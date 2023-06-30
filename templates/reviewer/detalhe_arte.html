@@ -1,0 +1,26 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+{% block content %}
+<script src="{% static 'js/cardKanbanFunction.js' %}"></script>
+
+<div class="cards" style="display: flex; flex-wrap: wrap;">
+    <div class="card-detail" >
+        <div class="card" style="width: 70em; height: 50em; display: flex; flex-direction: column; align-items: center; padding: 10%;">
+            <h1 style="font-size: 25px;">Detalhe da Arte</h1>
+            <p style="font-weight: bold;">Id da Compra: {{idOrder}}</p>
+            <p>Cliente: {{nameClient}}</p>
+            <p>Produtos: {{productName}}</p>
+            <p>Data de envio: {{date}}</p>
+            <img src="https://fotografias-lucas-alura-space.s3.amazonaws.com/static/{{referenceFiles}}" style="width: 50%;" >
+            <a href="https://fotografias-lucas-alura-space.s3.amazonaws.com/static/{{referenceFiles}}" target="_blank" style="text-decoration: none;">Link para arquivos de referência.</a>
+            <h1 style="font-size: 25px;">Instruções para confecção da arte:</h1>
+            <p>{{instructions}}</p>
+            <a class="btn btn-success col-12" style="width: 50%;" href="{% url 'aprova_arte' artId=artId isApproved=1 %}">Aprovar</a>
+            <textarea placeholder="Explique aqui o porque a arte foi reprovada..." style="width: 50%; height: 20%; margin-top: 1%;" class="text-area" hidden></textarea>
+            <a class="btn btn-danger col-12 btn-reprove" style="width: 50%; margin-top: 1%;" >Reprovar</a>
+            <a class="btn btn-danger col-12 btn-reprove-true" style="width: 50%; margin-top: 1%; display: none;" href="{% url 'aprova_arte' artId=artId isApproved=0 %}" >Reprovar</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

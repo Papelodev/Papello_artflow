@@ -1,0 +1,41 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="card" style="display: flex; flex-direction: column; align-items: center; padding: 5%;">
+    <h1 class="cards__titulo" style="text-align: center; font-size: 40px;">Agora vamos á personalização, para seu Produto</h1>
+    {% if pedido %}
+        <div class="card__info" style="display: flex; flex-direction: column;" >
+
+            <form action="{% url 'envio_de_arte' pedido.idOrder %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for produto in produtos %}
+            <img src="{{produto.image}}" style="width: 20%; border-radius: 30px; margin-right: 5%;"></img>
+            {% if item.isKit %}
+                <div>
+                    <p>{{item.nameProduct}}</p>
+                    {% for product in item.productsKit %}
+                    <p style="font-size: 15px; font-weight: bold;margin-top: 1rem;">-{{ product.name }}</p>
+                    {% for field in form.visible_fields %}
+                    <label for="{{ field.id_for_label }}">{{field.label}}</label>
+                    {{field}}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            {% else %}
+            <div>
+                <p>-{{ produto }}</p>
+                {% for field in form.visible_fields %}
+                <label for="{{ field.id_for_label }}">{{field.label}}</label>
+                {{field}}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </br>
+            {% endfor %}
+            <a href=""  style="width: 50%;"><button class="btn btn-success col-12" type="submit">Próximo</button></a>
+        </div>
+            </form>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="card" style="display: flex; flex-direction: column; align-items: center; padding: 5%;">
+   <h1 style="font-size: 40px;">Arte Finalizada!</h1>
+   <p> Arte 1</p>
+    <img src="https://imgur.com/zgJGY3R.png">
+        <button class="btn btn-success col-12" style="width: 50%;">Aprovar Arte</button>
+        <button class="btn btn-danger col-12" style="margin-top: 10px; margin-bottom: 10px; width: 50%;">Solicitar Alteração</button>
+    <form style="display: flex; flex-direction: column;">
+        <p>Alterações restantes: X</p>
+        <textarea style="width: 500px; height: 200px;"></textarea>
+        <input type="file">Subir Arquivos</input type="file">
+        <button type="submit" class="btn btn-success col-12">Próximo</button>
+    </form>
+</div>
+{% endblock %}

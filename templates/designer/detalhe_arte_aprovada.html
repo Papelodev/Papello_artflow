@@ -1,0 +1,38 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+{% block content %}
+<script src="{% static 'js/cardKanbanFunction.js' %}"></script>
+
+<div class="cards" style="display: flex; flex-wrap: wrap;">
+    <div class="card-detail" >
+        <div class="card" style="width: 70em; height: 50em; display: flex; flex-direction: column; padding: 10%;">
+            <h1 style="font-size: 30px;">Detalhe da Arte</h1>
+            <br>
+            <p style="font-weight: bold;">Id da Compra: {{idOrder}}</p>
+            <p>Cliente: {{nameClient}}</p>
+            <p>Produtos: {{productName}}</p>
+            <p>Data de envio: {{date}}</p>
+            <img src="https://fotografias-lucas-alura-space.s3.amazonaws.com/static/{{referenceFiles}}" style="width: 50%;" >
+            <br>
+            <a href="https://fotografias-lucas-alura-space.s3.amazonaws.com/static/{{referenceFiles}}" target="_blank" style="text-decoration: none;">Link para arquivos de referência.</a>
+            <h1 style="font-size: 25px;">Instruções para confecção da arte:</h1>
+            <br>
+            <p>{{instructions}}</p>
+            <br>
+            {% if artStatus == "EM_ANDAMENTO"%}
+            <form action="{% url 'envio_prototipo' artId %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in form.visible_fields %}
+                <label for="{{ field.id_for_label }}" style="display: flex;">
+                    <h1 style="font-size: 20px; text-align: center;">{{field.label}}</h1>
+                    {{ field }}
+                </label>
+                {% endfor %}
+                <button type="submit" class="btn btn-success col-12" style="margin-top: 5%;">Enviar protótipo e concluir pedido</button>
+            </form>
+            {% endif %}        
+        </div>
+    </div>
+</div>
+
+{% endblock %}

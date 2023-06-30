@@ -33,11 +33,11 @@ class Arte(models.Model):
     )),
     ]
 
- 
     status = models.CharField(max_length=100, choices=STATUS, default='ENVIO-AGUARDANDO')
     idCustomer = models.IntegerField(null=False, blank = False)
     idOrder = models.IntegerField(null=False, blank = False)
     idProduct = models.IntegerField(null=False, blank = False)
+    date = models.DateField(default=datetime.now, null=False, blank = False)
 
 
 
