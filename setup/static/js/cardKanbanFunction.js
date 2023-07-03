@@ -16,7 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
   document.addEventListener('DOMContentLoaded', function() {
     const btnReprove = document.querySelector('.btn-reprove');
     const btnReproveTrue = document.querySelector('.btn-reprove-true');
-    console.log(btnReprove);
+    const alteraInput = document.querySelector('.altera-inputs')
+    console.log(alteraInput);
 
     btnReprove.addEventListener('click', (event) => {
       event.preventDefault()
@@ -25,5 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
       textArea.hidden = false;
       btnReprove.style.display = 'none';
       btnReproveTrue.style.display = '';
+      alteraInput.classList.remove('altera-inputs');
     }) 
   });

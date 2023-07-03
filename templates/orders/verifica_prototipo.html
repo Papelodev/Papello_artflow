@@ -13,9 +13,20 @@
             <p>Data de envio: {{date}}</p>
             <img src="https://fotografias-lucas-alura-space.s3.amazonaws.com/static/{{mockup}}" style="width: 50%;" >
             <a class="btn btn-success col-12" style="width: 50%; margin-top: 2%;" href="{% url 'aprova_prototipo' artId=artId isApproved=1%}">Aprovar</a>
-            <textarea placeholder="Explique aqui o que você deseja alterar no protótipo..." style="width: 50%; height: 20%; margin-top: 1%;" class="text-area" hidden></textarea>
-            <a class="btn btn-danger col-12 btn-reprove" style="width: 50%; margin-top: 1%;" >Solicitar Alteração</a>
-            <a class="btn btn-danger col-12 btn-reprove-true" style="width: 50%; margin-top: 1%; display: none;" href="{% url 'aprova_prototipo' artId=artId isApproved=0%}" >Solicitar Alteração</a>
+            <form action="{% url 'aprova_prototipo' artId=artId isApproved=0 %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="altera-inputs">
+                    {% for field in form.visible_fields %}
+                    <label for="{{ field.id_for_label }}">{{field.label}}</label>
+                    {{field}}
+                </div>
+            {% endfor %}
+            <textarea placeholder="Explique aqui o que você deseja alterar no protótipo..." style="width: 100%; height: 100%; margin-top: 1%;" class="text-area" hidden></textarea>
+            <a class="btn btn-danger col-12 btn-reprove" style="width: 35rem; margin-top: 1%;" >Solicitar Alteração</a>
+            <button class="btn btn-danger col-12 btn-reprove-true" style="width: 100%; margin-top: 1%; display: none;" type="submit" >Solicitar Alteração</button>
+
+            </form>
+
         </div>
     </div>
 </div>

@@ -8,7 +8,7 @@ from apps.usuarios.models import MyUser
 
 from apps.customers.models import CustomerProfile
 
-from apps.galeria.forms import ArteForms, PrototipoForms
+from apps.galeria.forms import ArteForms, PrototipoForms, AlteracaoForms
 
 import requests
 
@@ -37,26 +37,33 @@ def meus_pedidos(request):
 
 def detalhe_pedido(request, idOrder):
     pedido = get_object_or_404(Order, idOrder=idOrder)
-    produtos_pedido = OrderProduct.objects.filter(order=pedido)
+    produtos_pedido = list(OrderProduct.objects.filter(order=pedido))
 
     #Verifica se o pedido já tem uma arte enviada (LEMBRAR DE MUDAR O FILTER PARA GET DEPOIS)
     arts = Arte.objects.filter(idOrder=idOrder)
     art = arts.first()
     if arts.exists():
         return render(request, 'orders/detalhe_pedido.html', {'pedido': pedido, 'produtos': produtos_pedido, 'art': art})  
-    #produtos_ids = [produto.id for produto in produtos_pedido]
-    #produtos_associados = Product.objects.filter(id__in=produtos_ids)
-    #print(produtos_associados)
-    return render(request, 'orders/detalhe_pedido.html', {'pedido': pedido, 'produtos': produtos_pedido, 'art': art})
+    produtos_associados = list(Product.objects.filter(orderproduct__in=produtos_pedido))
+    produtos_combinados = zip(produtos_associados, produtos_pedido)
+    for produto, produtos_pedido in produtos_combinados:
+       produto.quantity = produtos_pedido.quantity
+
+    print(pedido)
+    return render(request, 'orders/detalhe_pedido.html', {'pedido': pedido, 'produtos': produtos_associados, 'art': art})
 
 def customizacao(request, idOrder):
     pedido = get_object_or_404(Order, idOrder=idOrder)
-    produtos_pedido = OrderProduct.objects.filter(order=pedido)
-    return render(request, 'orders/customizacao.html', {'pedido': pedido, 'produtos': produtos_pedido})
+    produtos_pedido = list(OrderProduct.objects.filter(order=pedido))
+    produtos_associados = list(Product.objects.filter(orderproduct__in=produtos_pedido))
+    produtos_combinados = zip(produtos_associados, produtos_pedido)
+    for produto, produtos_pedido in produtos_combinados:
+       produto.quantity = produtos_pedido.quantity
+    return render(request, 'orders/customizacao.html', {'pedido': pedido, 'produtos': produtos_associados})
 
 def envio_de_arte(request, idOrder):
     pedido = get_object_or_404(Order, idOrder=idOrder)
-    produtos_pedido = OrderProduct.objects.filter(order=pedido)
+    produtos_pedido = list(OrderProduct.objects.filter(order=pedido))
     if request.method =='POST':
         form = ArteForms(request.POST, request.FILES)
         if form.is_valid():
@@ -86,7 +93,11 @@ def envio_de_arte(request, idOrder):
             messages.success(request, 'Muito Obrigado! Te avisaremos se precisarmos de mais alguma coisa')
             return redirect('detalhe_pedido', idOrder=idOrder)
     form = ArteForms(request.POST, request.FILES)
-    return render(request, 'orders/envio_de_arte.html', {'pedido': pedido, 'produtos': produtos_pedido, 'form': form})
+    produtos_associados = list(Product.objects.filter(orderproduct__in=produtos_pedido))
+    produtos_combinados = zip(produtos_associados, produtos_pedido)
+    for produto, produtos_pedido in produtos_combinados:
+       produto.quantity = produtos_pedido.quantity
+    return render(request, 'orders/envio_de_arte.html', {'pedido': pedido, 'produtos': produtos_associados, 'form': form})
 
 def arte_finalizada(request):
     return render(request, 'orders/arte_finalizada.html')
@@ -156,7 +167,7 @@ def verifica_prototipo(request, idOrder):
     customer= CustomerProfile.objects.get(idCustomer=art.idCustomer)
     order= Order.objects.get(idOrder=art.idOrder)
     product = Product.objects.get(product_id=art.idProduct)
-    form = PrototipoForms(request.POST, request.FILES)
+    form = AlteracaoForms(request.POST, request.FILES)
     context = {
         'artStatus': art.status,
         'artId': art.id,
@@ -177,8 +188,15 @@ def aprova_prototipo(request, artId, isApproved):
             art.save()
             messages.success(request, 'Protótipo Aprovado')
         else:
-            art.status="ALTERAÇÃO"
-            art.alteracounter += 1
-            art.save()
-            messages.error(request, 'Alteração Solicitada')
+            form = AlteracaoForms(request.POST, request.FILES)
+            if form.is_valid():
+                alterafiles = request.FILES.get('alterafiles')
+                art.status="ALTERAÇÃO"
+                art.alteracounter += 1
+                art.alterafiles = alterafiles
+                art.save()
+                messages.error(request, 'Alteração Solicitada')
         return redirect('meus_pedidos')
+
+
+    

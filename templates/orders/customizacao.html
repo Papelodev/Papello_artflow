@@ -4,48 +4,52 @@
 
 <div class="card" style="display: flex; flex-direction: column; align-items: center;">
     <h1 class="cards__titulo">Customização</h1>
-    {% if pedido %}
-        <div class="card__info" style="display: flex;">
-            {% for produto in produtos %}
-            <img src="{{produto.image}}" style="width: 20%; border-radius: 30px;"></img>
-
-            {% if item.isKit %}
-            <div style="display: flex; flex-direction: column; justify-content: center; padding: 20px 20px;">
-                <p>{{item.nameProduct}}</p>
-                <p style="font-size: 15px;">O kit contém:</p>
-                {% for product in item.productsKit %}
-                <p style="font-size: 15px;">-{{ product.name }}</p>
-                {% endfor %}
-                <p>Para esse produto você pode selecionar até {{item.productsKit|length}} arte(s).</p>
-                <label>
-                    Selecione quantas artes para esse produto:
-                    <select>
-                        <option>0</option>
-                        {% for product in item.productsKit %}
-                        <option>{{ forloop.counter }}</option>
+        {% if pedido %}
+            <div class="card__info">
+                {% for produto in produtos %}
+                {% if produto.isCustomizeable %}
+                {% if produto.is_kit %}
+                <div style="display: flex;">
+                    <img src="{{produto.image}}" style="width: 20%; border-radius: 30px;"></img>
+                    <div style="display: flex; flex-direction: column; justify-content: center; padding: 20px 20px;">
+                        <p>- {{ produto }}</p>
+                        <p style="font-size: 15px;">O kit contém:</p>
+                     {% for product in produto.products_kit %}
+                        <p style="font-size: 15px;">-{{ product.name }}</p>
                         {% endfor %}
-                    </select>
-                </label>
-            </div>
-            {% else %}
-            <div style="display: flex; flex-direction: column; justify-content: center; padding: 20px 20px;">
-                <p>- {{ produto }}</p>
-                <p>Para esse produto você pode selecionar até {{produtos|length}} arte(s).</p>
-                <label>
-                    Selecione quantas artes para esse produto:
-                    <select>
-                        <option>0</option>
-                        {% for produto in produtos %}
-                        <option>{{ forloop.counter }}</option>
-                        {% endfor %}
-                    </select>
-                </label>
-            </div>
+                        <p>Para esse produto você pode selecionar até {{produto.products_kit|length}} arte(s).</p>
+                        <label>
+                            Selecione quantas artes para esse produto:
+                            <select>
+                                <option>0</option>
+                                {% for product in produto.products_kit %}
+                                <option>{{ forloop.counter }}</option>
+                                {% endfor %}
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                {% else %}
+                <div style="display: flex;">
+                    <img src="{{produto.image}}" style="width: 20%; border-radius: 30px;"></img>
+                    <div style="display: flex; flex-direction: column; justify-content: center; padding: 20px 20px;">
+                        <p>- {{ produto }}</p>
+                        <p>Para esse produto você pode selecionar até 1 arte(s).</p>
+                        <label>
+                            Selecione quantas artes para esse produto:
+                            <select>
+                                <option>0</option>
+                                <option>1</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                {% endif %}
             {% endif %}
-        </br>
+            </br>
             {% endfor %}
         </div>
-        <a href="{% url 'envio_de_arte' pedido.idOrder %}" style="width: 50%;"><button class="btn btn-success col-12" >Próximo</button></a>
+        <a href="{% url 'envio_de_arte' pedido.idOrder %}" style="width: 50%; margin-bottom: 6%;"><button class="btn btn-success col-12" >Próximo</button></a>
     {% endif %}
 </div>
 {% endblock %}

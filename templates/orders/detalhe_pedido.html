@@ -19,7 +19,7 @@
         {% for produto in produtos %}
             <ul>
                 <li> - {{ produto }}</li>
-                {% if produto.isKit %}
+                {% if produto.is_kit %}
                     <p style="font-size: 15px;">O kit contém:</p>
                   {% for product in produto.products_kit %}
                     <p style="font-size: 15px;">-{{ product.name }}</p>

@@ -562,3 +562,7 @@ table {
     height: 30rem;
     background-color: #DADADA;
   }
+
+.altera-inputs {
+    display: none;
+}

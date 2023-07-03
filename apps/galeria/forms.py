@@ -51,3 +51,14 @@ class PrototipoForms(forms.ModelForm):
         widgets = {
             'mockup':forms.FileInput(attrs={'class':'form-control', 'style':'width: 50%;'}),
         }
+
+class AlteracaoForms(forms.ModelForm):
+    class Meta:
+        model = Arte
+        exclude = ['idCustomer', 'idOrder', 'idProduct', 'alteracounter', 'mockup', 'artefinal', 'alteracoes', 'referencefiles', 'instructions', 'date', 'status']
+        labels ={
+            'alterafiles':'Envie aqui todo tipo de referência de mídia  para a alteracão da arte do produto.',
+        }
+        widgets = {
+            'alterafiles':forms.FileInput(attrs={'class':'form-control', 'style':'width: 50%;'}),
+        }
