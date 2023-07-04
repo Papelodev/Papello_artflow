@@ -1,5 +1,6 @@
 {% extends 'shared/base.html' %}
 {% load static %}
+{% load custom_tags %}
 {% block content %}
 
 <div class="card" style="display: flex; flex-direction: column; align-items: center;">
@@ -34,12 +35,15 @@
                     <img src="{{produto.image}}" style="width: 20%; border-radius: 30px;"></img>
                     <div style="display: flex; flex-direction: column; justify-content: center; padding: 20px 20px;">
                         <p>- {{ produto }}</p>
-                        <p>Para esse produto você pode selecionar até 1 arte(s).</p>
+                        <p>Quantidade: {{ produto.quantity }}</p>
+                        <p>Para esse produto você pode selecionar até {{produto.quantity}} arte(s).</p>
                         <label>
                             Selecione quantas artes para esse produto:
                             <select>
                                 <option>0</option>
-                                <option>1</option>
+                                {% for i in produto.quantity|range_filter %}
+                                <option>{{ i|add:1 }}</option>
+                            {% endfor %}
                             </select>
                         </label>
                     </div>
@@ -49,7 +53,7 @@
             </br>
             {% endfor %}
         </div>
-        <a href="{% url 'envio_de_arte' pedido.idOrder %}" style="width: 50%; margin-bottom: 6%;"><button class="btn btn-success col-12" >Próximo</button></a>
+        <a href="{% url 'envio_de_arte' pedido.idOrder 0 %}" style="width: 50%; margin-bottom: 6%;"><button class="btn btn-success col-12" >Próximo</button></a>
     {% endif %}
 </div>
 {% endblock %}

@@ -13,6 +13,10 @@ from apps.galeria.forms import ArteForms, PrototipoForms, AlteracaoForms
 import requests
 
 from django.contrib import auth, messages
+
+from django.http import HttpResponseRedirect
+
+from django.urls import reverse
 # Create your views here.
 
 def meus_pedidos(request):
@@ -61,43 +65,59 @@ def customizacao(request, idOrder):
        produto.quantity = produtos_pedido.quantity
     return render(request, 'orders/customizacao.html', {'pedido': pedido, 'produtos': produtos_associados})
 
-def envio_de_arte(request, idOrder):
+def envio_de_arte(request, idOrder, indice):
     pedido = get_object_or_404(Order, idOrder=idOrder)
     produtos_pedido = list(OrderProduct.objects.filter(order=pedido))
+    indice_produto = int(indice) if indice else 0
+    print(indice_produto)
+        
+    produtos_associados = list(Product.objects.filter(orderproduct__in=produtos_pedido,  isCustomizeable=True))
+    produtos_kit = list(Product.objects.filter(is_kit=True,  isCustomizeable=True))
+    produtos_combinados = zip(produtos_associados, produtos_pedido)
+    for produto, produtos_pedido in produtos_combinados:
+       produto.quantity = produtos_pedido.quantity
+
+    produtos_associados = [produto for produto in produtos_associados if not produto.is_kit]
+
+    for produto_kit in produtos_kit:
+        for produto in produto_kit.products_kit:
+            produtos_associados.append(produto)
+
+    produto_atual = produtos_associados[indice]
+
     if request.method =='POST':
         form = ArteForms(request.POST, request.FILES)
         if form.is_valid():
             customer = CustomerProfile.objects.get(user=request.user)
-
-            #Busca os ids dos produtos que estão em OrderProducts
-
-            produtos_ids = [produto.id for produto in produtos_pedido]
-            
-            #Seleciona os mesmos produtos que estão em OrderProducts, na tabela Products para pegar o idProduct de cada um.
-
-            produtos_associados = Product.objects.filter(id__in=produtos_ids)
-
             instructions = request.POST.get('instructions')
             referencefiles = request.FILES.get('referencefiles')
             idCustomer = customer.idCustomer
-            statusEnviado = "ENVIADO" 
+            statusEnviado = "ENVIADO"
+            print(produto_atual)
 
-            #Salva arte enviada pelo cliente na tabela Arte
+            if isinstance(produto_atual, dict):
+
+                if 'idProduct' in produto_atual:
+                    idProduct = produto_atual['idProduct']
+            else:
+                idProduct = produto_atual.product_id
+                orderProduct = OrderProduct.objects.get(product=produto_atual, order=pedido)
             arte = Arte(
                 instructions=instructions,
                 referencefiles=referencefiles,
-                idCustomer=idCustomer, idOrder=idOrder,
-                idProduct=produtos_associados[0].product_id,
+                idCustomer=idCustomer,
+                idOrder=idOrder,
+                idProduct=idProduct,
+                orderProduct=orderProduct,
                 status=statusEnviado)
             arte.save()
-            messages.success(request, 'Muito Obrigado! Te avisaremos se precisarmos de mais alguma coisa')
-            return redirect('detalhe_pedido', idOrder=idOrder)
+            messages.success(request, 'Arquivos enviados!')
+            return redirect(f'/envio-de-arte/{idOrder}/{indice + 1}')
+
     form = ArteForms(request.POST, request.FILES)
-    produtos_associados = list(Product.objects.filter(orderproduct__in=produtos_pedido))
-    produtos_combinados = zip(produtos_associados, produtos_pedido)
-    for produto, produtos_pedido in produtos_combinados:
-       produto.quantity = produtos_pedido.quantity
-    return render(request, 'orders/envio_de_arte.html', {'pedido': pedido, 'produtos': produtos_associados, 'form': form})
+    print("Não entrou")
+
+    return render(request, 'orders/envio_de_arte.html', {'pedido': pedido, 'produto': produto_atual, 'form': form, 'indice_produto': indice_produto})
 
 def arte_finalizada(request):
     return render(request, 'orders/arte_finalizada.html')
@@ -198,5 +218,3 @@ def aprova_prototipo(request, artId, isApproved):
                 messages.error(request, 'Alteração Solicitada')
         return redirect('meus_pedidos')
 
-
-    

@@ -30,7 +30,7 @@ class FotografiaForms(forms.ModelForm):
 class ArteForms(forms.ModelForm):
     class Meta:
         model = Arte
-        exclude = ['idCustomer', 'idOrder', 'status', 'idProduct', 'mockup', 'alteracounter', 'alterafiles', 'artefinal', 'alteracoes', 'date']
+        exclude = ['idCustomer', 'idOrder', 'status', 'idProduct','orderProduct', 'mockup', 'alteracounter', 'alterafiles', 'artefinal', 'alteracoes', 'date']
         labels ={
             'instructions':'Envie aqui todo tipo de referência de mídia  para a confecção da arte',
             'referencefiles': 'Envie aqui todo tipo de referência de mídia  para a confecção da arte do produto'
@@ -55,7 +55,7 @@ class PrototipoForms(forms.ModelForm):
 class AlteracaoForms(forms.ModelForm):
     class Meta:
         model = Arte
-        exclude = ['idCustomer', 'idOrder', 'idProduct', 'alteracounter', 'mockup', 'artefinal', 'alteracoes', 'referencefiles', 'instructions', 'date', 'status']
+        exclude = ['idCustomer', 'idOrder', 'idProduct', 'orderProduct', 'alteracounter', 'mockup', 'artefinal', 'alteracoes', 'referencefiles', 'instructions', 'date', 'status']
         labels ={
             'alterafiles':'Envie aqui todo tipo de referência de mídia  para a alteracão da arte do produto.',
         }

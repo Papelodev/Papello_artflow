@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime
+from apps.orders.models import OrderProduct
 from django.contrib.auth.models import User
 from django.conf import settings
 from functools import partial
@@ -38,6 +39,7 @@ class Arte(models.Model):
     idOrder = models.IntegerField(null=False, blank = False)
     idProduct = models.IntegerField(null=False, blank = False)
     date = models.DateField(default=datetime.now, null=False, blank = False)
+    orderProduct = models.ForeignKey(OrderProduct, on_delete=models.CASCADE, related_name='Arte')
 
 
 

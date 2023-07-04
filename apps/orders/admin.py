@@ -26,4 +26,5 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-   pass
+   list_display = ("product_id", "product_name")
+   search_fields= ("product_id",)

@@ -1,6 +1,5 @@
 from django.db import models
 from jsonfield import JSONField
-from apps.galeria.models import Arte
 from apps.customers.models import CustomerProfile
 
 
@@ -142,10 +141,9 @@ class OrderProduct(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_products')
     customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, related_name='OrderProduct')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    quantity = models.IntegerField(null=True)
     image = models.URLField(null=True)
     idOrderItem = models.IntegerField()
-    artes = models.ManyToManyField(Arte)  
 
     def __str__(self):
         return f"{self.quantity} {self.product.product_code} {self.product.product_name}"
