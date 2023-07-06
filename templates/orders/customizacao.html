@@ -2,12 +2,11 @@
 {% load static %}
 {% load custom_tags %}
 {% block content %}
-
+<script src="{% static 'js/quantityFormSubmit.js' %}"></script>
 <div class="card" style="display: flex; flex-direction: column; align-items: center;">
     <h1 class="cards__titulo">Customização</h1>
         {% if pedido %}
             <div class="card__info">
-                {% for produto in produtos %}
                 {% if produto.isCustomizeable %}
                 {% if produto.is_kit %}
                 <div style="display: flex;">
@@ -36,24 +35,28 @@
                     <div style="display: flex; flex-direction: column; justify-content: center; padding: 20px 20px;">
                         <p>- {{ produto }}</p>
                         <p>Quantidade: {{ produto.quantity }}</p>
-                        <p>Para esse produto você pode selecionar até {{produto.quantity}} arte(s).</p>
-                        <label>
-                            Selecione quantas artes para esse produto:
-                            <select>
-                                <option>0</option>
-                                {% for i in produto.quantity|range_filter %}
-                                <option>{{ i|add:1 }}</option>
-                            {% endfor %}
-                            </select>
-                        </label>
+                        <p>Para esse produto você pode selecionar até {{produto.quantity}} arte(s).</p> 
+                            <form action="{% url 'customizacao' pedido.idOrder 1 %}" method="POST" enctype="multipart/form-data" id="art_quantity_formulario">
+                                {% csrf_token %}
+                                {{ form }}
+                            </form>
                     </div>
+                        <div style="display: flex; flex-direction: column;">
+                        {% if opcoes_arte %}
+                        <h3>Escolha as artes para cada grupo de produtos:</h3>
+                        {% for opcao in opcoes_arte %}
+                            <label for="arte_{{ opcao.arte_numero }}">Arte {{ opcao.arte_numero }}</label>
+                            <input type="text" name="arte_{{ opcao.arte_numero }}" id="arte_{{ opcao.arte_numero }}" required>
+                            <p>Quantidade de produtos: {{ opcao.quantidade_produtos }}</p>
+                        {% endfor %}
+                        {% endif %}
+                        </div>
                 </div>
                 {% endif %}
             {% endif %}
             </br>
-            {% endfor %}
         </div>
-        <a href="{% url 'envio_de_arte' pedido.idOrder 0 %}" style="width: 50%; margin-bottom: 6%;"><button class="btn btn-success col-12" >Próximo</button></a>
+        <a href="" style="width: 50%; margin-bottom: 6%;"><button class="btn btn-success col-12" >Próximo</button></a>
     {% endif %}
 </div>
 {% endblock %}

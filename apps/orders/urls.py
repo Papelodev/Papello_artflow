@@ -4,7 +4,7 @@ from .views import meus_pedidos, detalhe_pedido, customizacao, envio_de_arte, ar
 urlpatterns = [
     path('meus-pedidos/', meus_pedidos, name='meus_pedidos'),
     path('detalhe-pedido/<int:idOrder>', detalhe_pedido, name='detalhe_pedido'),
-    path('customizacao/<int:idOrder>', customizacao, name='customizacao'),
+    path('customizacao/<int:idOrder>/<int:indice>', customizacao, name='customizacao'),
     path('envio-de-arte/<int:idOrder>/<int:indice>', envio_de_arte, name="envio_de_arte"),
     path("arte-finalizada", arte_finalizada, name="arte_finalizada"),
     path('detalhe-arte/<int:artId>', detalhe_arte, name='detalhe_arte'),

@@ -10,6 +10,8 @@ from apps.customers.models import CustomerProfile
 
 from apps.galeria.forms import ArteForms, PrototipoForms, AlteracaoForms
 
+from apps.orders.forms import Art_quantity_forms
+
 import requests
 
 from django.contrib import auth, messages
@@ -56,14 +58,45 @@ def detalhe_pedido(request, idOrder):
     print(pedido)
     return render(request, 'orders/detalhe_pedido.html', {'pedido': pedido, 'produtos': produtos_associados, 'art': art})
 
-def customizacao(request, idOrder):
+def customizacao(request, idOrder, indice):
     pedido = get_object_or_404(Order, idOrder=idOrder)
     produtos_pedido = list(OrderProduct.objects.filter(order=pedido))
-    produtos_associados = list(Product.objects.filter(orderproduct__in=produtos_pedido))
+    produtos_associados = list(Product.objects.filter(orderproduct__in=produtos_pedido,  isCustomizeable=True))
+    produtos_kit = list(Product.objects.filter(is_kit=True,  isCustomizeable=True))
     produtos_combinados = zip(produtos_associados, produtos_pedido)
     for produto, produtos_pedido in produtos_combinados:
        produto.quantity = produtos_pedido.quantity
-    return render(request, 'orders/customizacao.html', {'pedido': pedido, 'produtos': produtos_associados})
+
+    produtos_associados = [produto for produto in produtos_associados if not produto.is_kit]
+
+    for produto_kit in produtos_kit:
+        for produto in produto_kit.products_kit:
+            produtos_associados.append(produto)
+
+    produto_atual = produtos_associados[indice]
+    form = Art_quantity_forms(quantidade_produtos=produto_atual.quantity)
+    if request.method =='POST':
+        #if form.is_valid():
+            print('Entrous')
+            quantidade_artes = int(request.POST.get('quantidade_artes'))
+            quantidade_produtos = produto_atual.quantity
+
+            # Calcular a quantidade de produtos disponíveis para cada arte
+            quantidade_por_arte = quantidade_produtos // quantidade_artes
+            
+            # Gerar as opções de arte com base na quantidade disponível
+            opcoes_artes = []
+            for i in range(quantidade_artes):
+                opcoes_artes.append({
+                    'arte_numero': i + 1,
+                    'quantidade_produtos': quantidade_por_arte
+                })
+            # Passar as opções de arte para o template
+            return render(request, 'orders/customizacao.html', {'pedido': pedido, 'produto': produto_atual, 'form': form, 'opcoes_arte': opcoes_artes})
+
+
+
+    return render(request, 'orders/customizacao.html', {'pedido': pedido, 'produto': produto_atual, 'form': form})
 
 def envio_de_arte(request, idOrder, indice):
     pedido = get_object_or_404(Order, idOrder=idOrder)
@@ -84,6 +117,10 @@ def envio_de_arte(request, idOrder, indice):
             produtos_associados.append(produto)
 
     produto_atual = produtos_associados[indice]
+    print(produto_atual)
+    if(produto_atual.quantity > 1):
+        pedido = get_object_or_404(Order, idOrder=idOrder)
+        return redirect(f'/customizacao/{idOrder}/{indice}')
 
     if request.method =='POST':
         form = ArteForms(request.POST, request.FILES)
@@ -115,7 +152,6 @@ def envio_de_arte(request, idOrder, indice):
             return redirect(f'/envio-de-arte/{idOrder}/{indice + 1}')
 
     form = ArteForms(request.POST, request.FILES)
-    print("Não entrou")
 
     return render(request, 'orders/envio_de_arte.html', {'pedido': pedido, 'produto': produto_atual, 'form': form, 'indice_produto': indice_produto})
 

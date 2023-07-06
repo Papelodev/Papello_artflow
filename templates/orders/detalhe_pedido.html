@@ -39,7 +39,7 @@
         <p>Quem recebe: {{pedido.address.receiver}}</p>
     </div>
             {% if pedido.nameStatus == "Aprovado" and not art.status%}
-            <a href="{% url 'customizacao' pedido.idOrder %}"><button class="btn btn-success col-12" style="width: 40%;">Personalize aqui!</button></a>
+            <a href="{% url 'envio_de_arte' pedido.idOrder 0 %}"><button class="btn btn-success col-12" style="width: 40%;">Personalize aqui!</button></a>
             {% endif %}
 
             {% if pedido.nameStatus == "Aprovado" and art.status == "CONCLUÍDO"%}
