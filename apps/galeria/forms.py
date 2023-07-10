@@ -44,7 +44,7 @@ class ArteForms(forms.ModelForm):
 class PrototipoForms(forms.ModelForm):
     class Meta:
         model = Arte
-        exclude = ['idCustomer', 'idOrder', 'idProduct', 'alteracounter', 'alterafiles', 'artefinal', 'alteracoes', 'referencefiles', 'instructions', 'date', 'status']
+        exclude = ['idCustomer', 'idOrder', 'idProduct', 'alteracounter','orderProduct', 'alterafiles', 'artefinal', 'alteracoes', 'referencefiles', 'instructions', 'date', 'status']
         labels ={
             'mockup':'Envie aqui o protótipo pronto.',
         }

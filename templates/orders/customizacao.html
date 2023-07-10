@@ -1,8 +1,10 @@
 {% extends 'shared/base.html' %}
 {% load static %}
 {% load custom_tags %}
+{% load custom_filters %}
 {% block content %}
 <script src="{% static 'js/quantityFormSubmit.js' %}"></script>
+<script src="{% static 'js/calculaArtesPorProduto.js' %}"></script>
 <div class="card" style="display: flex; flex-direction: column; align-items: center;">
     <h1 class="cards__titulo">Customização</h1>
         {% if pedido %}
@@ -19,14 +21,21 @@
                         {% endfor %}
                         <p>Para esse produto você pode selecionar até {{produto.products_kit|length}} arte(s).</p>
                         <label>
-                            Selecione quantas artes para esse produto:
-                            <select>
-                                <option>0</option>
-                                {% for product in produto.products_kit %}
-                                <option>{{ forloop.counter }}</option>
+                            <form action="" method="POST" enctype="multipart/form-data" id="art_quantity_formulario">
+                                {% csrf_token %}
+                                {{ form }}
+                            </form>
+                            <div style="display: flex; flex-direction: column;">
+                                {% if opcoes_arte %}
+                                <input type="hidden" id="quantidade-produtos" value="{{ produto.quantity  }}">
+                                <h3>Escolha as artes para cada grupo de produtos:</h3>
+                                {% for opcao in opcoes_arte %}
+                                    <label for="arte_{{ opcao.arte_numero }}">Arte {{ opcao.arte_numero }} para {{ produto.products_kit|get_item:forloop.counter|stringformat:"s" }}
+                                    </label>
+                                    <input style="width: 5%;" onkeydown="return false" type="number" min="1" max="{{ opcao.quantidade_produtos }}" name="arte_{{ opcao.arte_numero }}" id="arte_{{ opcao.arte_numero }}" value=1 required>
                                 {% endfor %}
-                            </select>
-                        </label>
+                                {% endif %}
+                                </div>
                     </div>
                 </div>
                 {% else %}
@@ -34,29 +43,31 @@
                     <img src="{{produto.image}}" style="width: 20%; border-radius: 30px;"></img>
                     <div style="display: flex; flex-direction: column; justify-content: center; padding: 20px 20px;">
                         <p>- {{ produto }}</p>
+                        <p>{{indice}}</p>
                         <p>Quantidade: {{ produto.quantity }}</p>
                         <p>Para esse produto você pode selecionar até {{produto.quantity}} arte(s).</p> 
-                            <form action="{% url 'customizacao' pedido.idOrder 1 %}" method="POST" enctype="multipart/form-data" id="art_quantity_formulario">
+                            <form action="" method="POST" enctype="multipart/form-data" id="art_quantity_formulario">
                                 {% csrf_token %}
                                 {{ form }}
                             </form>
+                            <div style="display: flex; flex-direction: column;">
+                                {% if opcoes_arte %}
+                                <input type="hidden" id="quantidade-produtos" value="{{ produto.quantity  }}">
+                                <h3>Escolha as artes para cada grupo de produtos:</h3>
+                                {% for opcao in opcoes_arte %}
+                                    <label for="arte_{{ opcao.arte_numero }}">Arte {{ opcao.arte_numero }}</label>
+                                    <input style="width: 5%;" onkeydown="return false" type="number" min="1" max="{{ opcao.quantidade_produtos }}" name="arte_{{ opcao.arte_numero }}" id="arte_{{ opcao.arte_numero }}" value=1 required>
+                                {% endfor %}
+                                {% endif %}
+                                </div>
                     </div>
-                        <div style="display: flex; flex-direction: column;">
-                        {% if opcoes_arte %}
-                        <h3>Escolha as artes para cada grupo de produtos:</h3>
-                        {% for opcao in opcoes_arte %}
-                            <label for="arte_{{ opcao.arte_numero }}">Arte {{ opcao.arte_numero }}</label>
-                            <input type="text" name="arte_{{ opcao.arte_numero }}" id="arte_{{ opcao.arte_numero }}" required>
-                            <p>Quantidade de produtos: {{ opcao.quantidade_produtos }}</p>
-                        {% endfor %}
-                        {% endif %}
-                        </div>
+ 
                 </div>
                 {% endif %}
             {% endif %}
             </br>
         </div>
-        <a href="" style="width: 50%; margin-bottom: 6%;"><button class="btn btn-success col-12" >Próximo</button></a>
+        <a href="{% url 'envio_de_arte_por_quantidade' pedido.idOrder indice opcoes_arte|length %}" style="width: 50%; margin-bottom: 6%;"><button class="btn btn-success col-12" >Próximo</button></a>
     {% endif %}
 </div>
 {% endblock %}

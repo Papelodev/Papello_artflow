@@ -6,4 +6,4 @@ class Art_quantity_forms(forms.Form):
     def __init__(self, *args, **kwargs):
         quantidade_produtos = kwargs.pop('quantidade_produtos')
         super(Art_quantity_forms, self).__init__(*args, **kwargs)
-        self.fields['quantidade_artes'].choices = [(str(i), str(i)) for i in range(1, quantidade_produtos + 1)]
+        self.fields['quantidade_artes'].choices = [(str(i), str(i)) for i in range(0, quantidade_produtos + 1)]

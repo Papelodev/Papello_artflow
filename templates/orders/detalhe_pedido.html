@@ -1,5 +1,6 @@
 {% extends 'shared/base.html' %}
 {% load static %}
+{% load custom_filters %}
 {% block content %}
 
 {% if pedido %}
@@ -9,24 +10,41 @@
         <p class="card__titulo">ID do Pedido: {{pedido.idOrder}}</p>
         <p>Data do pedido: {{pedido.dateOrder}}</p>
         <p>Status do pedido : {{pedido.nameStatus}}</p>
-        {% if art %}
-        <p>Status da arte: {{art.status}}</p>
-        {% else %}
-        <p>Status da arte: Aguardando Envio</p>
-        {% endif %}
         <p class="card__titulo">Items do pedido: </p>
 
         {% for produto in produtos %}
             <ul>
                 <li> - {{ produto }}</li>
+                <img src="{{produto.image}}" style="width: 20%; border-radius: 30px; padding: 10px 10px;"></img>
                 {% if produto.is_kit %}
                     <p style="font-size: 15px;">O kit contém:</p>
                   {% for product in produto.products_kit %}
                     <p style="font-size: 15px;">-{{ product.name }}</p>
+                    {% if arts %}
+                    <p>Status da arte: {{ product.idProduct|get_art:pedido.idOrder }}</p>
+                    {% endif %}
+                    {% if pedido.nameStatus == "Aprovado" and product.idProduct|get_art:pedido.idOrder == "CONCLUÍDO"%}
+                    <a href="{% url 'verifica_prototipo' pedido.idOrder product.idProduct %}"><button class="btn btn-success col-12" style="width: 40%;">Verificar protótipo!</button></a>
+                    {% endif %}
                   {% endfor %}
                 {% endif %}
-                <img src="{{produto.image}}" style="width: 20%; border-radius: 30px; padding: 10px 10px;"></img>
                 <p>Quantidade : {{produto.quantity}}</p>
+                {% if produto.quantity > 1 %}
+                  {% for arte in produto.product_id|get_art:pedido.idOrder %}
+                  <p>Status da arte {{forloop.counter}}: {{ arte.status }}</p>
+                  {% if pedido.nameStatus == "Aprovado" and arte.status == "CONCLUÍDO"%}
+                  <a href="{% url 'verifica_prototipo' pedido.idOrder produto.product_id %}"><button class="btn btn-success col-12" style="width: 40%;">Verificar protótipo!</button></a>
+                  {% endif %}
+                  {% endfor %}
+                {% endif %}
+                {% if produto.isCustomizeable and not produto.is_kit and produto.quantity == 1%}
+                  {% if arts %}
+                  <p>Status da arte: {{ produto.product_id|get_art:pedido.idOrder }}</p>
+                  {% endif %}
+                  {% if pedido.nameStatus == "Aprovado" and produto.product_id|get_art:pedido.idOrder == "CONCLUÍDO"%}
+                  <a href="{% url 'verifica_prototipo' pedido.idOrder produto.product_id %}"><button class="btn btn-success col-12" style="width: 40%;">Verificar protótipo!</button></a>
+                  {% endif %}
+                {% endif %}
             </ul>
         {% endfor %}
         <p class="card__titulo">Total : {{pedido.order_total}}</p>
@@ -38,12 +56,8 @@
         <p>UF: {{pedido.address.state}}</p>
         <p>Quem recebe: {{pedido.address.receiver}}</p>
     </div>
-            {% if pedido.nameStatus == "Aprovado" and not art.status%}
+            {% if pedido.nameStatus == "Aprovado" and  arts != produtos|length%}
             <a href="{% url 'envio_de_arte' pedido.idOrder 0 %}"><button class="btn btn-success col-12" style="width: 40%;">Personalize aqui!</button></a>
-            {% endif %}
-
-            {% if pedido.nameStatus == "Aprovado" and art.status == "CONCLUÍDO"%}
-            <a href="{% url 'verifica_prototipo' pedido.idOrder %}"><button class="btn btn-success col-12" style="width: 40%;">Verificar protótipo!</button></a>
             {% endif %}
 
 </div>
