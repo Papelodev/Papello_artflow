@@ -8,6 +8,7 @@
         <div class="card" style="width: 70em; height: 50em; display: flex; flex-direction: column; align-items: center; padding: 10%;">
             <h1 style="font-size: 25px;">Detalhe do Protótipo</h1>
             <p style="font-weight: bold;">Id da Compra: {{idOrder}}</p>
+            <p style="font-weight: bold;">Id da Arte: {{artId}}</p>
             <p>Cliente: {{nameClient}}</p>
             <p>Produtos: {{productName}}</p>
             <p>Data de envio: {{date}}</p>
@@ -21,7 +22,6 @@
                     {{field}}
                 </div>
             {% endfor %}
-            <textarea placeholder="Explique aqui o que você deseja alterar no protótipo..." style="width: 100%; height: 100%; margin-top: 1%;" class="text-area" hidden></textarea>
             <a class="btn btn-danger col-12 btn-reprove" style="width: 35rem; margin-top: 1%;" >Solicitar Alteração</a>
             <button class="btn btn-danger col-12 btn-reprove-true" style="width: 100%; margin-top: 1%; display: none;" type="submit" >Solicitar Alteração</button>
 

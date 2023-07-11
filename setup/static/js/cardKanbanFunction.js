@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
       event.preventDefault()
       const textArea = document.querySelector('.text-area')
       console.log(textArea);
-      textArea.hidden = false;
+      textArea.style.display = '';
       btnReprove.style.display = 'none';
       btnReproveTrue.style.display = '';
       alteraInput.classList.remove('altera-inputs');

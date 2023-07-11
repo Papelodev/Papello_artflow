@@ -8,7 +8,7 @@ from apps.usuarios.models import MyUser
 
 from apps.customers.models import CustomerProfile
 
-from apps.galeria.forms import ArteForms, PrototipoForms, AlteracaoForms
+from apps.galeria.forms import ArteForms, PrototipoForms, AlteracaoForms, rejectionReviewerForm
 
 from apps.orders.forms import Art_quantity_forms
 
@@ -237,8 +237,11 @@ def aprova_arte(request, artId, isApproved):
         art.status="APROVADO"
         art.save()
         messages.success(request, 'Arte Aprovada')
-    else:
+    if request.method == 'POST':
+        form = rejectionReviewerForm(request.POST, request.FILES)
+        rejection_reason = request.POST.get('rejection_reason')
         art.status="AGUARDANDO"
+        art.rejection_reason = rejection_reason
         art.save()
         messages.error(request, 'Arte Reprovada')
     return redirect('meus_pedidos')
@@ -267,6 +270,8 @@ def detalhe_arte(request, artId):
         
         return render(request, 'designer/detalhe_arte_aprovada.html', context)
 
+    form = rejectionReviewerForm()
+    context['form'] = form
     return render(request, 'reviewer/detalhe_arte.html', context)
 
 def envio_prototipo(request, artId):
@@ -286,13 +291,14 @@ def envio_prototipo(request, artId):
     
 def pegar_card(request, artId):
     art = Arte.objects.get(id=artId)
-    art.status="EM_ANDAMENTO"
+    art.status = "EM_ANDAMENTO"
+    art.designer_responsible = request.user
     art.save()
     arts = Arte.objects.all()
     return render(request, 'designer/designer_home.html', {'arts': arts})
 
-def verifica_prototipo(request, idOrder, idProduct):
-    art = Arte.objects.get(idOrder=idOrder, idProduct=idProduct)
+def verifica_prototipo(request, idOrder, idProduct, artId):
+    art = Arte.objects.get(idOrder=idOrder, idProduct=idProduct, id=artId)
     customer= CustomerProfile.objects.get(idCustomer=art.idCustomer)
     order= Order.objects.get(idOrder=art.idOrder)
     product = Product.objects.get(product_id=art.idProduct)
@@ -327,3 +333,19 @@ def aprova_prototipo(request, artId, isApproved):
                 messages.error(request, 'Alteração Solicitada')
         return redirect('meus_pedidos')
 
+def arquivos_reprovados(request, artId):
+    art = Arte.objects.get(id=artId)
+    form = ArteForms(request.POST, request.FILES)
+    if request.method =='POST':
+        if form.is_valid():
+            instructions = request.POST.get('instructions')
+            referencefiles = request.FILES.get('referencefiles')
+            print(referencefiles)
+        
+            art.instructions = instructions
+            art.referencefiles = referencefiles
+            art.status = "ENVIADO"
+            art.save()
+            messages.success(request, "Arquivos enviados")
+            return redirect('meus_pedidos')
+    return render(request, 'orders/arquivos_reprovados.html', {'art': art, 'form': form})

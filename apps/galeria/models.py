@@ -2,6 +2,7 @@ from django.db import models
 from datetime import datetime
 from apps.orders.models import OrderProduct
 from django.contrib.auth.models import User
+from apps.usuarios.models import MyUser
 from django.conf import settings
 from functools import partial
 
@@ -40,12 +41,14 @@ class Arte(models.Model):
     idProduct = models.IntegerField(null=False, blank = False)
     date = models.DateField(default=datetime.now, null=False, blank = False)
     orderProduct = models.ForeignKey(OrderProduct, on_delete=models.CASCADE, related_name='Arte')
+    designer_responsible = models.ForeignKey(MyUser, on_delete=models.CASCADE, null=True, related_name='Arte')
 
 
 
     #referências para confecção
     instructions = models.CharField(max_length=500, null=False, blank = False)
     referencefiles = models.FileField(upload_to=partial(upload_file_path, field_name='references'), blank=True)
+    rejection_reason = models.CharField(max_length=500, null=True)
 
     #arquivo para aprovação
     mockup = models.ImageField(upload_to=partial(upload_file_path, field_name='mockup'), blank=True)

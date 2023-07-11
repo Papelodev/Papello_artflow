@@ -5,9 +5,10 @@
 
 <div class="cards" style="display: flex; flex-wrap: wrap;">
     <div class="card-detail" >
-        <div class="card" style="width: 70em; height: 50em; display: flex; flex-direction: column; align-items: center; padding: 10%;">
+        <div class="card" style="width: 70em; height: 70em; display: flex; flex-direction: column; align-items: center; padding: 10%;">
             <h1 style="font-size: 25px;">Detalhe da Arte</h1>
             <p style="font-weight: bold;">Id da Compra: {{idOrder}}</p>
+            <p>ID da arte: {{artId}}</p>
             <p>Cliente: {{nameClient}}</p>
             <p>Produtos: {{productName}}</p>
             <p>Data de envio: {{date}}</p>
@@ -16,9 +17,14 @@
             <h1 style="font-size: 25px;">Instruções para confecção da arte:</h1>
             <p>{{instructions}}</p>
             <a class="btn btn-success col-12" style="width: 50%;" href="{% url 'aprova_arte' artId=artId isApproved=1 %}">Aprovar</a>
-            <textarea placeholder="Explique aqui o porque a arte foi reprovada..." style="width: 50%; height: 20%; margin-top: 1%;" class="text-area" hidden></textarea>
-            <a class="btn btn-danger col-12 btn-reprove" style="width: 50%; margin-top: 1%;" >Reprovar</a>
-            <a class="btn btn-danger col-12 btn-reprove-true" style="width: 50%; margin-top: 1%; display: none;" href="{% url 'aprova_arte' artId=artId isApproved=0 %}" >Reprovar</a>
+            <form action="{% url 'aprova_arte' artId=artId isApproved=0 %}" method="post">
+            {% for field in form %}
+            {% csrf_token %}
+                {{field}}
+            {% endfor %}
+            <a class="btn btn-danger col-12 btn-reprove" style="width: 100%; margin-top: 1%;" >Reprovar</a>
+            <button class="btn btn-danger col-12 btn-reprove-true" style="width: 100%; margin-top: 1%; display: none;" type="submit" >Reprovar</button>
+            </form>
         </div>
     </div>
 </div>

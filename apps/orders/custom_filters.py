@@ -21,11 +21,11 @@ def get_art(idProduct, idOrder):
         if art_count == 1:  
         # Apenas um objeto encontrado
             art = Arte.objects.get(idProduct=idProduct, idOrder=idOrder)
-            return art.status
+            return {'status': art.status, 'id': art.id}
         if art_count > 1:
             # Mais de um objeto encontrado
             # Faça algo aqui
             art = Arte.objects.filter(idProduct=idProduct, idOrder=idOrder)
             return art
     else:
-        return 'Aguardando Envio'
+        return {'status':'Aguardando Envio'}

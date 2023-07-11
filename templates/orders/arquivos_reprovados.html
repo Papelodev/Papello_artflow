@@ -1,0 +1,28 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+{% block content %}
+<script src="{% static 'js/cardKanbanFunction.js' %}"></script>
+
+<div class="cards" style="display: flex; flex-wrap: wrap;">
+    <div class="card-detail" >
+        <div class="card" style="width: 70em; height: 70em; display: flex; flex-direction: column; align-items: center; padding: 10%;">
+            <h1 style="font-size: 25px;">Detalhe da Arte</h1>
+            <p style="font-weight: bold;">Id da Compra: {{art.idOrder}}</p>
+            <p>Produtos: {{art.idProduct}}</p>
+            <p>Data de envio: {{art.date}}</p>
+            <h1 style="font-size: 25px;">Motivo da reprovação dos arquivos:</h1>
+            <p>{{art.rejection_reason}}</p>
+
+            <form action="{% url 'arquivos_reprovados' art.id %}" method="post" enctype="multipart/form-data">
+                {% for field in form %}
+                {% csrf_token %}
+                {{field.label}}
+                    {{field}}
+                {% endfor %}
+                <button class="btn btn-success col-12" style="width: 50%;" type="submit">Enviar novamente</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
