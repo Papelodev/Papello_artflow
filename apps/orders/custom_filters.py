@@ -29,3 +29,8 @@ def get_art(idProduct, idOrder):
             return art
     else:
         return {'status':'Aguardando Envio'}
+
+#Função para calcular o valor total de cada produto baseado na quantidade   
+@register.filter
+def mul(quantity, value):
+    return quantity * value

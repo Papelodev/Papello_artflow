@@ -4,18 +4,35 @@
 {% block content %}
 
 {% if pedido %}
-<div class="card" style="margin-bottom: 120px;">
-    <h1 class="cards__titulo" style="text-align: center; margin-top: 10px;">Detalhe Pedido</h1>
+<div  style="margin-bottom: 120px; display: flex; flex-direction: column; align-items: center;">
     <div class="card__info">
-        <p class="card__titulo">ID do Pedido: {{pedido.idOrder}}</p>
-        <p>Data do pedido: {{pedido.dateOrder}}</p>
-        <p>Status do pedido : {{pedido.nameStatus}}</p>
-        <p class="card__titulo">Items do pedido: </p>
-
+      <div style="display: flex; justify-content: space-between; padding-bottom: 5%; line-height: 1.5;">
+        <div>
+          <p style="font-size: 30px;">Detalhe do pedido</p>
+          <p style="font-size: 20px;">ID do Pedido: <span style="font-weight: bold;">{{pedido.idOrder}}</span></p>
+          <p style="font-size: 20px;">Seu pedido foi feito em: <span style="font-weight: bold;">{{pedido.dateOrder}}</span></p>
+          <p style="font-size: 20px;">Status do pedido : <span style="font-weight: bold;">{{pedido.nameStatus}}</span></p>
+          <p style="font-size: 20px;">Valort total: <span style="font-weight: bold;">R$ {{pedido.order_total}}</span></p>
+          <p style="font-size: 20px;">Forma de pagamento: <span style="font-weight: bold;">{{pedido.namePaymentMethodGateway}}</span></p>
+        </div>
+        <div style="font-size: 13px;">
+          <p class="card__titulo">Endereço para entrega:</p>
+          <p>Rua: {{pedido.address.streetAddress}}</p>
+          <p >Número: {{pedido.address.number}}</p>
+          <p>Bairro: {{pedido.address.neighbourhood}}</p>
+          <p>Cidade: {{pedido.address.city}}</p>
+          <p>UF: {{pedido.address.state}}</p>
+          <p>CEP: {{pedido.address.zipCode}}</p>
+          <p>Destinatário: {{pedido.address.receiver}}</p>
+        </div>
+      </div>
         {% for produto in produtos %}
             <ul>
-                <li> - {{ produto }}</li>
+              <div class="card">
+                <li style="font-size: 20px; font-weight: bold; line-height: 1.5;"> - {{ produto }}</li>
+                <div style="display: flex; line-height: 1.5;">
                 <img src="{{produto.image}}" style="width: 20%; border-radius: 30px; padding: 10px 10px;"></img>
+                <div>
                 {% if produto.is_kit %}
                     <p style="font-size: 15px;">O kit contém:</p>
                   {% for product in produto.products_kit %}
@@ -24,10 +41,10 @@
                     {% with art_data=product.idProduct|get_art:pedido.idOrder %}
                     <p>Status da arte: {{ art_data.status }}</p>
                     {% if pedido.nameStatus == "Aprovado" and art_data.status == "CONCLUÍDO" %}
-                    <a href="{% url 'verifica_prototipo' pedido.idOrder product.idProduct art_data.id %}"><button class="btn btn-success col-12" style="width: 40%;">Verificar protótipo!</button></a>
+                    <a href="{% url 'verifica_prototipo' pedido.idOrder product.idProduct art_data.id %}"><button class="btn btn-success col-12" style="width: 100%;">Verificar protótipo!</button></a>
                     {% endif %}
                     {% if pedido.nameStatus == "Aprovado" and art_data.status == "AGUARDANDO"%}
-                    <a href="{% url 'arquivos_reprovados' art_data.id %}"><button class="btn btn-danger col-12" style="width: 40%;">Verificar motivo da reprovação.</button></a>
+                    <a href="{% url 'arquivos_reprovados' art_data.id %}"><button class="btn btn-danger col-12" style="width: 100%;">Verificar motivo da reprovação.</button></a>
                     {% endif %}
                     {% endwith %}
                     {% else %}
@@ -36,15 +53,16 @@
                   {% endfor %}
                 {% endif %}
                 <p>Quantidade : {{produto.quantity}}</p>
+                <p>R$ {{produto.unit_price|mul:produto.quantity}}</p>
                 {% if produto.quantity > 1 %}
                   {% if arts %}
                   {% for arte in produto.product_id|get_art:pedido.idOrder %}
                   <p>Status da arte {{forloop.counter}}: {{ arte.status }}</p>
                   {% if pedido.nameStatus == "Aprovado" and arte.status == "CONCLUÍDO"%}
-                  <a href="{% url 'verifica_prototipo' pedido.idOrder produto.product_id arte.id %}"><button class="btn btn-success col-12" style="width: 40%;">Verificar protótipo!</button></a>
+                  <a href="{% url 'verifica_prototipo' pedido.idOrder produto.product_id arte.id %}"><button class="btn btn-success col-12" style="width: 100%;">Verificar protótipo!</button></a>
                   {% endif %}
                   {% if pedido.nameStatus == "Aprovado" and arte.status == "AGUARDANDO"%}
-                  <a href="{% url 'arquivos_reprovados' arte.id %}"><button class="btn btn-danger col-12" style="width: 40%;">Verificar motivo da reprovação.</button></a>
+                  <a href="{% url 'arquivos_reprovados' arte.id %}"><button class="btn btn-danger col-12" style="width: 100%;">Verificar motivo da reprovação.</button></a>
                   {% endif %}
                   {% endfor %}
                   {% else %}
@@ -56,31 +74,28 @@
                   {% with art_data=produto.product_id|get_art:pedido.idOrder %}
                     <p>Status da arte: {{ art_data.status }}</p>
                     {% if pedido.nameStatus == "Aprovado" and  art_data.status == "CONCLUÍDO"%}
-                    <a href="{% url 'verifica_prototipo' pedido.idOrder produto.product_id art_data.id %}"><button class="btn btn-success col-12" style="width: 40%;">Verificar protótipo!</button></a>
+                    <a href="{% url 'verifica_prototipo' pedido.idOrder produto.product_id art_data.id %}"><button class="btn btn-success col-12" style="width: 100%;">Verificar protótipo!</button></a>
                     {% endif %}
                     {% if pedido.nameStatus == "Aprovado" and art_data.status == "AGUARDANDO"%}
-                    <a href="{% url 'arquivos_reprovados' art_data.id %}"><button class="btn btn-danger col-12" style="width: 40%;">Verificar motivo da reprovação.</button></a>
+                    <a href="{% url 'arquivos_reprovados' art_data.id %}"><button class="btn btn-danger col-12" style="width: 100%;">Verificar motivo da reprovação.</button></a>
                     {% endif %}
                   {% endwith %}
                   {% else %}
                   <p>Status da arte: Aguardando envio</p>
                   {% endif %}
                 {% endif %}
+                <p style="font-size: 12px; position: absolute; bottom: 0;"><span style="color: red; font-weight: bold;">ATENÇÃO! </span>Previsão de entrega 15 dias úteis após aprovação da arte.</p>
+              </div>
+              </div>
+              </div>
             </ul>
         {% endfor %}
-        <p class="card__titulo">Total : {{pedido.order_total}}</p>
-        <p class="card__titulo">Endereço para entrega:</p>
-        <p>Rua: {{pedido.address.streetAddress}}</p>
-        <p >Número: {{pedido.address.number}}</p>
-        <p>Bairro: {{pedido.address.neighbourhood}}</p>
-        <p>Cidade: {{pedido.address.city}}</p>
-        <p>UF: {{pedido.address.state}}</p>
-        <p>Quem recebe: {{pedido.address.receiver}}</p>
     </div>
-            {% if pedido.nameStatus == "Aprovado" and  arts != produtos|length%}
-            <a href="{% url 'envio_de_arte' pedido.idOrder 0 %}"><button class="btn btn-success col-12" style="width: 40%;">Personalize aqui!</button></a>
+            {% if pedido.nameStatus == "Aprovado" and  arts != produtos|length%}<!--Refatorar essa condição -->
+            <a href="{% url 'envio_de_arte' pedido.idOrder 0 %}"><button class="btn btn-success col-12" style="width: 100%;">Personalize aqui!</button></a>
             {% endif %}
 
+</div>
 </div>
 {% endif %}
 {% endblock %}

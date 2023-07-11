@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from apps.galeria.models import Fotografia
+from apps.galeria.models import Fotografia, Arte
 from apps.galeria.forms import FotografiaForms
+from apps.orders.models import CustomerProfile
 from django.contrib import messages
 
 
@@ -10,8 +11,10 @@ def index(request):
     if not request.user.is_authenticated:
         messages.error(request, "Usuario não logado")
         return redirect('login')
-    fotografias = Fotografia.objects.order_by("data_fotografia").filter(publicada=True)
-    return render(request, 'galeria/index.html',{"cards": fotografias})
+    customer = CustomerProfile.objects.get(user=request.user)
+    arts = Arte.objects.filter(idCustomer=customer.idCustomer, status='APROVADA')
+    print(arts)
+    return render(request, 'galeria/index.html',{"cards": arts})
 
 def imagem (request, foto_id):
     if not request.user.is_authenticated:

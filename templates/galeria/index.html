@@ -5,23 +5,21 @@
                 <section class="galeria">
                
                     <div class="cards">
-                        <h2 class="cards__titulo">Navegue pela galeria</h2>
+                        <h2 class="cards__titulo">Artes feitas anteriormente</h2>
                         <ul class="cards__lista">
                             {% if cards %}
-                            {% for fotografia in cards %}
+                            {% for arte in cards %}
                             <li class="card">
-                                <a href="{% url 'imagem' fotografia.id %}">
-                                    {% if fotografia.foto == "" or fotografia.foto == null %}
-                                    <img class="card__imagem" src="{% static 'assets/imagens/galeria/404.png' %}" alt="foto">
-                                    {% else %}
-                                    <img class="card__imagem" src="{{fotografia.foto.url}}" alt="foto">
-                                    {% endif %}
+                                <a href="{% url 'imagem' arte.id %}">
+                                    <!--Mudar esse campo para arte.artefinal depois-->
+                                    <img class="card__imagem" src="https://fotografias-lucas-alura-space.s3.amazonaws.com/static/{{arte.referencefiles}}" alt="foto">
                                 </a>
-                                <span class="card__tag">{{fotografia.categoria}}</span>
+                                <p>{{arte.referencefiles}}</p>
+                                <span class="card__tag">{{arte.status}}</span>
                                 <div class="card__info">
-                                    <p class="card__titulo">{{ fotografia.nome }}</p>
+                                    <p class="card__titulo">{{ arte.orderProduct }}</p>
                                     <div class="card__texto">
-                                        <p class="card__descricao">{{ fotografia.legenda }}</p>
+                                        <p class="card__descricao">{{ arte.instructions }}</p>
                                         <span>
                                             <img src="{% static 'assets/ícones/1x/favorite_outline.png' %}" alt="ícone de coração">
                                         </span>

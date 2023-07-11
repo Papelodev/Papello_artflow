@@ -1,8 +1,8 @@
-{% extends 'shared/base.html' %}
+{% extends 'shared/baseLogin.html' %}
 {% load static %}
 {% block content %}
 
-            <section class="galeria" style="margin-left: 5em">               
+            <section class="galeria" style="margin-left: 5em;">               
                         <form action="{% url 'cadastro' %}" method="POST">
                             {% csrf_token %}
                             <div class="row">
@@ -28,6 +28,5 @@
             </section>
         </main>
     </div>
-</body>
 
 {% endblock %}
