@@ -10,11 +10,10 @@
                             {% if cards %}
                             {% for arte in cards %}
                             <li class="card">
-                                <a href="{% url 'imagem' arte.id %}">
+                                <a href="{% url 'detalhe_arte' arte.id %}">
                                     <!--Mudar esse campo para arte.artefinal depois-->
                                     <img class="card__imagem" src="https://fotografias-lucas-alura-space.s3.amazonaws.com/static/{{arte.referencefiles}}" alt="foto">
                                 </a>
-                                <p>{{arte.referencefiles}}</p>
                                 <span class="card__tag">{{arte.status}}</span>
                                 <div class="card__info">
                                     <p class="card__titulo">{{ arte.orderProduct }}</p>

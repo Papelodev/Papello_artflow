@@ -1,10 +1,10 @@
-{% extends 'shared/base.html' %}
+{% extends 'shared/baseDesigner.html' %}
 {% load static %}
 {% block content %}
 <script src="{% static 'js/cardKanbanFunction.js' %}"></script>
 
 <div class="cards" style="display: flex; flex-wrap: nowrap; margin-bottom: 40%;">
-    <div class="a-fazer" style="width: 20%; height: 100%; background-color: #FAFAFA; text-align: center; border-radius: 10px; display: flex; flex-direction: column; align-items: center;">
+    <div class="a-fazer" style="width: 20%; height: 100%; background-color: #FAFAFA; text-align: center; border-radius: 10px; display: flex; flex-direction: column; align-items: center; border: 1px solid black">
         <h1 style="font-size: 22px;">Á fazer</h1>
         {% for art in arts%}
         {% if art.status == "APROVADO"%}
@@ -24,7 +24,7 @@
         {% endif %}
         {% endfor %}
     </div>
-    <div class="fazendo" style="width: 20%; height: 100%; background-color: #FAFAFA; text-align: center; border-radius: 10px; display: flex; flex-direction: column; align-items: center; margin-left: 1%;">
+    <div class="fazendo" style="width: 20%; height: 100%; background-color: #FAFAFA; text-align: center; border-radius: 10px; display: flex; flex-direction: column; align-items: center; margin-left: 1%; border: 1px solid black">
         <h1 style="font-size: 22px;">Fazendo</h1>
         {% for art in arts%}
         {% if art.status == "EM_ANDAMENTO"%}
@@ -38,7 +38,7 @@
         {% endif %}
         {% endfor %}
     </div>
-    <div class="concluido" style="width: 20%; height: 100%; background-color: #FAFAFA; text-align: center; border-radius: 10px; display: flex; flex-direction: column; align-items: center; margin-left: 1%;">
+    <div class="concluido" style="width: 20%; height: 100%; background-color: #FAFAFA; text-align: center; border-radius: 10px; display: flex; flex-direction: column; align-items: center; margin-left: 1%; border: 1px solid black">
         <h1 style="font-size: 22px;">Concluído </h1>
         {% for art in arts%}
         {% if art.status == "CONCLUÍDO"%}
@@ -52,7 +52,7 @@
         {% endif %}
         {% endfor %}
     </div>
-    <div class="alteracao" style="width: 20%; height: 100%; background-color: #FAFAFA; text-align: center; border-radius: 10px; display: flex; flex-direction: column; align-items: center; margin-left: 1%;">
+    <div class="alteracao" style="width: 20%; height: 100%; background-color: #FAFAFA; text-align: center; border-radius: 10px; display: flex; flex-direction: column; align-items: center; margin-left: 1%; border: 1px solid black">
         <h1 style="font-size: 22px;">Alterações </h1>
         {% for art in arts%}
         {% if art.status == "ALTERAÇÃO"%}
@@ -74,7 +74,7 @@
     </div>
     {% for art in arts%}
     {% if art.status == "APROVADA"%}
-    <div class="aprovado" style="width:20%; height: 100%; background-color: #FAFAFA; text-align: center; border-radius: 10px; display: flex; flex-direction: column; align-items: center; margin-left: 1%;">
+    <div class="aprovado" style="width:20%; height: 100%; background-color: #FAFAFA; text-align: center; border-radius: 10px; display: flex; flex-direction: column; align-items: center; margin-left: 1%; border: 1px solid black">
         <h1 style="font-size: 22px;">Aprovados </h1>
         <div class="card-kanban"style="width: 90%; background-color: #dadada; border-radius: 10px; margin: 10px; padding: 10px;">
             <p>Cliente: {{art.idCustomer}}</p>
