@@ -22,6 +22,7 @@ class Arte(models.Model):
         ("AGUARDANDO", "Aguardando"),
         ("ENVIADO", "Enviado"),
         ("APROVADO", "Aprovado"),
+        ("REPROVADO", "Reprovado"),
     )),
     ("Confecção", (
         ("AGUARDANDO", "Aguardando"),

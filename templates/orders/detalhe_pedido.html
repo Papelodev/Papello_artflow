@@ -39,7 +39,7 @@
                     <p style="font-size: 15px;">-{{ product.name }}</p>
                     {% if arts %}
                     {% with art_data=product.idProduct|get_art:pedido.idOrder %}
-                    <p>Status da arte: {{ art_data.status }}</p>
+                    <p>Status da arte: <span style="color: green; font-weight: bold;">{{ art_data.status }}</span></p>
                     {% if pedido.nameStatus == "Aprovado" and art_data.status == "CONCLUÍDO" %}
                     <a href="{% url 'verifica_prototipo' pedido.idOrder product.idProduct art_data.id %}"><button class="btn btn-success col-12" style="width: 100%;">Verificar protótipo!</button></a>
                     {% endif %}
@@ -57,7 +57,7 @@
                 {% if produto.quantity > 1 %}
                   {% if arts %}
                   {% for arte in produto.product_id|get_art:pedido.idOrder %}
-                  <p>Status da arte {{forloop.counter}}: {{ arte.status }}</p>
+                  <p>Status da arte {{forloop.counter}}: <span style="color: green; font-weight: bold;">{{ arte.status }}</span></p>
                   {% if pedido.nameStatus == "Aprovado" and arte.status == "CONCLUÍDO"%}
                   <a href="{% url 'verifica_prototipo' pedido.idOrder produto.product_id arte.id %}"><button class="btn btn-success col-12" style="width: 100%;">Verificar protótipo!</button></a>
                   {% endif %}
@@ -72,7 +72,7 @@
                 {% if produto.isCustomizeable and not produto.is_kit and produto.quantity == 1%}
                   {% if arts %}
                   {% with art_data=produto.product_id|get_art:pedido.idOrder %}
-                    <p>Status da arte: {{ art_data.status }}</p>
+                    <p>Status da arte: <span style="color: green; font-weight: bold;">{{ art_data.status }}</span></p>
                     {% if pedido.nameStatus == "Aprovado" and  art_data.status == "CONCLUÍDO"%}
                     <a href="{% url 'verifica_prototipo' pedido.idOrder produto.product_id art_data.id %}"><button class="btn btn-success col-12" style="width: 100%;">Verificar protótipo!</button></a>
                     {% endif %}
