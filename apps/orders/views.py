@@ -236,14 +236,14 @@ def aprova_arte(request, artId, isApproved):
     if(isApproved):
         art.status="APROVADO"
         art.save()
-        messages.success(request, 'Arte Aprovada')
+        messages.success(request, 'Arquivos Aprovados')
     if request.method == 'POST':
         form = rejectionReviewerForm(request.POST, request.FILES)
         rejection_reason = request.POST.get('rejection_reason')
         art.status="AGUARDANDO"
         art.rejection_reason = rejection_reason
         art.save()
-        messages.error(request, 'Arte Reprovada')
+        messages.error(request, 'Arquivos reprovados')
     return redirect('meus_pedidos')
     
 

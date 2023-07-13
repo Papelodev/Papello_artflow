@@ -6,7 +6,11 @@ from django.contrib.auth.models import User
 
 from apps.usuarios.models import MyUser
 
+from apps.customers.models import CustomerProfile
+
 from django.contrib import auth, messages
+
+import json
 
 
 def login(request):
@@ -74,3 +78,8 @@ def logout(request):
     messages.success(request, "Logout efetuado com sucesso!")
     return redirect('login')
 
+
+def meus_dados(request):
+    user = CustomerProfile.objects.get(user=request.user)
+    print(user.address)
+    return render(request, "usuarios/meus_dados.html", {'user': user})

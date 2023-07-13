@@ -1,6 +1,7 @@
 from django.db import models
 from apps.usuarios.models import MyUser
 #from apps.orders.models import Order
+from jsonfield import JSONField
 from datetime import datetime
 
 class CustomerProfile(models.Model):
@@ -12,8 +13,8 @@ class CustomerProfile(models.Model):
     phone2 = models.CharField(max_length=20)
     birthDate = models.DateField()
     typeCustomer = models.CharField(max_length=100)
-    address = models.CharField(max_length=255)
-    billingAddress = models.CharField(max_length=255)
+    address = models.JSONField(null=True)
+    billingAddress = models.JSONField(null=True)
     gender = models.CharField(max_length=10)
     cpf_cnpj = models.CharField(max_length=20)
     rg_ie = models.CharField(max_length=20)

@@ -1,0 +1,23 @@
+{% extends 'shared/base.html' %}
+{% load static %}
+{% block content %}
+<script src="{% static 'js/cardKanbanFunction.js' %}"></script>
+
+<div class="cards" style="display: flex; flex-wrap: wrap;">
+    <ul>
+        <h1 style="font-size: 50px; padding-bottom: 25%;">Meus dados</h1>
+        <li>Username: {{user.user}}</li>
+        <li>Nome: {{user.nameCustomer}}</li>
+        <li>Telefone: {{user.phone1}}</li>
+        <ul>Endereço:
+            <li>Rua: {{user.address.streetAddress}}</li>
+            <li>Número: {{user.address.number}}</li>
+            <li>Bairro: {{user.address.neighbourhood}}</li>
+            <li>Cidade: {{user.address.city}}</li>
+            <li>UF: {{user.address.state}}</li>
+            <li>CEP: {{user.address.zipCode}}</li>
+        </ul>
+    </ul>
+</div>
+</div>
+{% endblock %}

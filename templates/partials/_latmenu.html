@@ -1,5 +1,5 @@
 {% load static %}
-<div class="pagina-inicial" style="height: 100%;">
+<div class="pagina-inicial" style="height: 100%; padding-bottom: 50%;">
     <header class="cabecalho">
         <img src="{% static 'assets/logo/logo-font-escura.png' %}" alt="Logo Papello" />
         {% include 'partials/_alertas.html' %}
@@ -18,8 +18,8 @@
         <section class="menu-lateral">
             <nav class="menu-lateral__navegacao">
                 <a href="{% url 'index' %}"><img src="{% static 'assets/ícones/1x/home.png' %}" style="width: 32px;"> Minhas Artes</a>
-                <a href="{% url 'logout' %}"><img src="{% static 'assets/ícones/1x/meus-dados.png' %}" style="width: 32px;"> Meus Dados</a>
                 <a href="{% url 'meus_pedidos' %}"><img src="{% static 'assets/ícones/1x/meus-pedidos.png' %}" style="width: 32px;"> Meus Pedidos</a>
+                <a href="{% url 'meus_dados' %}"><img src="{% static 'assets/ícones/1x/meus-dados.png' %}" style="width: 32px;"> Meus Dados</a>
                 <a href="{% url 'logout' %}"><img src="{% static 'assets/ícones/1x/logout.png' %}" style="width: 32px;"> Logout</a>
                 <!-- <a href="{% url 'nova_imagem' %}"><img src="{% static 'assets/ícones/1x/Surpreenda-me - inativo.png' %}"> Nova Imagem </a>-->
             </nav>
